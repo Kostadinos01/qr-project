@@ -13,11 +13,13 @@ import {
   User,
 } from 'firebase/auth';
 import { getFirebaseConfig } from './firebaseConfig';
+import { getStorage } from 'firebase/storage';
 
 const app = initializeApp(getFirebaseConfig);
 
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+export const storage = getStorage(app);
 
 // Function to create a user document in Firestore
 const createUserDocument = async (user: User | null) => {
