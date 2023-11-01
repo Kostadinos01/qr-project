@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import QRCode from "qrcode";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import {
@@ -6,7 +6,7 @@ import {
   Container,
   Title,
   Subtitle,
-  ImageInput,
+  AddImgBtn,
   ImageUploadBtn,
   QRGeneratorBtn,
   QRCodeImage,
@@ -22,6 +22,16 @@ const ImageUpload: React.FC = () => {
   const [qrCodes, setQrCodes] = useState<string[]>([]);
   const [successUploading, setSuccessUploading] = useState<boolean>(false);
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleAddImgClick = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (inputFileRef.current) {
+      inputFileRef.current.click();
+    }
+  };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -92,9 +102,13 @@ const ImageUpload: React.FC = () => {
         <Subtitle>
           Please select images, upload them, and generate QR codes. You can also download the generated QR codes.
         </Subtitle>
-        <ImageInput
+        <AddImgBtn onClick={handleAddImgClick}>Add Image</AddImgBtn>
+        <input
           type="file"
-          placeholder="Select your images"
+          accept="image/*"
+          capture="environment"
+          ref={inputFileRef}
+          style={{ display: 'none' }}
           onChange={handleImageChange}
         />
         <ImageUploadBtn variant="contained" onClick={uploadImagesToFirebase}>

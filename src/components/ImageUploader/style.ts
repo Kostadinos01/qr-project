@@ -1,7 +1,6 @@
 import {
   styled,
   Button,
-  Input,
   Grid,
 } from '@mui/material';
 
@@ -38,10 +37,25 @@ const Subtitle = styled("h3")({
   marginBottom: "50px",
 });
 
-const ImageInput = styled(Input)({
-  margin: '10px 0',
+const AddImgBtn = styled(Button)({
   color: "white",
+  backgroundColor: "#009999",
   fontWeight: "800",
+  borderRadius: "20px",
+
+  "&:hover": {
+    backgroundColor: "#004d4d",
+  },
+});
+
+const ImagePreview = styled("img")({
+  maxWidth: "250px",
+  maxHeight: "250px",
+  justifyContent: "center",
+  margin: "auto",
+  display: "flex",
+  marginTop: "50px",
+  marginBottom: "50px",
 });
 
 const ImageUploadBtn = styled(Button)({
@@ -96,7 +110,8 @@ export {
   Container,
   Title,
   Subtitle,
-  ImageInput,
+  AddImgBtn,
+  ImagePreview,
   ImageUploadBtn,
   Paragraph,
   QRGeneratorBtn,
