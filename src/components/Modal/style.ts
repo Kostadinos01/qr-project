@@ -9,7 +9,7 @@ const Container = styled(Box)({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  maxWidth: 800,
   backgroundColor: '#009999',
   border: '2px solid #009999',
   borderRadius: '15px',
@@ -33,7 +33,7 @@ const AddFolderBtn = styled(Button)({
 
 const AddImgBtn = styled(Button)({
   color: "white",
-  backgroundColor: "#009999",
+  backgroundColor: "#004d4d",
   fontWeight: "800",
   borderRadius: "20px",
 

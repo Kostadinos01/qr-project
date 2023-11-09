@@ -17,6 +17,16 @@ export const ROUTES: Array<PlatformRoute<any>> = [
     component: lazy(() => import("../pages/private/Home")),
   },
   {
+    path: PATHS.folderProfiles,
+    guard: AuthGuard,
+    component: lazy(() => import("../pages/private/FolderProfiles")),
+  },
+  {
+    path: PATHS.overviewFolderProfile,
+    guard: AuthGuard,
+    component: lazy(() => import("../pages/private/FolderProfileOverview")),
+  },
+  {
     path: PATHS.login,
     guard: GuestGuard,
     component: lazy(() => import("../pages/public/Login")),

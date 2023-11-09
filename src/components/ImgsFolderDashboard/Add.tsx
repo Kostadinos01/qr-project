@@ -1,27 +1,44 @@
 import React, { useRef, useState } from 'react';
-import Modal from '@mui/material/Modal';
-import CustomTextField from '../TextField';
-import {
-  Container,
-  AddFolderBtn,
-  AddImgBtn,
-  ImagePreview,
-  ImageUploadBtn,
-} from './style';
-
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebase/firebase';
-import { Button, Grid } from '@mui/material';
+import Swal from 'sweetalert2';
 import QRCode from "qrcode";
+import { Grid, Modal } from '@mui/material';
+import {
+  AddImgBtn,
+  CancelBtn,
+  Container,
+  ImagePreview,
+} from './style';
+import { AddProfilePageProps } from './types';
+import { storage } from '../../firebase/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ImageUploadBtn } from '../ImageUploader/style';
+import CustomTextField from '../TextField';
+import { AddFolderBtn } from '../Modal/style';
 
-export default function CustomModal() {
-  const [open, setOpen] = useState<boolean>(false);
-  const [folderName, setFolderName] = useState<string>('');
+const Add = ({
+  folderProfiles,
+  setIsAdding,
+}: AddProfilePageProps) => {
+  const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [showFolder, setShowFolder] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(false);
+
+  const handleOpen = () => setOpen(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFiles(null);
+  };
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleCancelClick = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    setIsAdding(false);
+  }
 
   const handleAddImgClick = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -36,7 +53,25 @@ export default function CustomModal() {
     setSelectedFiles(files);
   };
 
-  const uploadImagesToFirebase = async () => {
+  const handleAdd = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (!folderName || !selectedFiles) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'All fields are required.',
+        showConfirmButton: true,
+      });
+    }
+
+    const newProfile = {
+      folderName,
+      selectedFiles,
+    };
+
+    folderProfiles.push(newProfile);
+
     if (!selectedFiles) {
       console.error('No files selected');
       return;
@@ -54,7 +89,6 @@ export default function CustomModal() {
         const imageUrl = await getDownloadURL(imageRef);
 
         uploadedImageUrls.push(imageUrl);
-        handleClose();
       }
 
       setUploadedImageUrls(uploadedImageUrls);
@@ -74,17 +108,17 @@ export default function CustomModal() {
         generatedQRCodes.push(qrCode);
       }
 
-      setShowFolder(true);
+      Swal.fire({
+        icon: 'success',
+        title: 'Added!',
+        text: `Data has been Added.`,
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
     } catch (error) {
       console.error('Error uploading images:', error);
     }
-  };
-
-  const handleOpen = () => setOpen(true);
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedFiles(null);
   };
 
   const folders = () => {
@@ -120,12 +154,16 @@ export default function CustomModal() {
             ))
           }
         </Grid>
-        <ImageUploadBtn variant="contained" onClick={uploadImagesToFirebase}>
-          Upload The Folder
+        <ImageUploadBtn variant="contained" onClick={handleAdd}>
+          Add
         </ImageUploadBtn>
+        <CancelBtn variant="contained" onClick={handleCancelClick}>
+          Cancel
+        </CancelBtn>
       </Container>
     )
   }
+
 
   return (
     <>
@@ -138,15 +176,8 @@ export default function CustomModal() {
       >
         {folders()}
       </Modal>
-      {showFolder &&
-        <Grid
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button>Hello</Button>
-        </Grid>
-      }
     </>
   );
-}
+};
+
+export default Add;

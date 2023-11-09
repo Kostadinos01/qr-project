@@ -1,27 +1,43 @@
 import React, { useRef, useState } from 'react';
-import Modal from '@mui/material/Modal';
-import CustomTextField from '../TextField';
-import {
-  Container,
-  AddFolderBtn,
-  AddImgBtn,
-  ImagePreview,
-  ImageUploadBtn,
-} from './style';
-
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { storage } from '../../firebase/firebase';
-import { Button, Grid } from '@mui/material';
+import Swal from 'sweetalert2';
 import QRCode from "qrcode";
+import { Modal } from '@mui/material';
+import {
+  AddImgBtn,
+  CancelBtn,
+  Container,
+} from './style';
+import { EditProfilePageProps } from './types';
+import { storage } from '../../firebase/firebase';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ImageUploadBtn } from '../ImageUploader/style';
+import CustomTextField from '../TextField';
 
-export default function CustomModal() {
-  const [open, setOpen] = useState<boolean>(false);
-  const [folderName, setFolderName] = useState<string>('');
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+
+const Edit = ({
+  folderProfiles,
+  setIsEditing,
+  selectedFolderProfile,
+  getFolderProfiles,
+}: EditProfilePageProps) => {
+  const [editedFolderName, setEditedFolderName] = useState(selectedFolderProfile?.folderName);
+  const [selectedFiles, setSelectedFiles] = useState(selectedFolderProfile?.selectedFiles);
+
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [showFolder, setShowFolder] = useState<boolean>(false);
+  const [open, setOpen] = useState<boolean>(true);
+
+  const handleClose = () => {
+    setOpen(false);
+    setSelectedFiles(null);
+  };
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleCancelClick = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    setIsEditing(false);
+  }
 
   const handleAddImgClick = (e: { preventDefault: () => void }) => {
     e.preventDefault();
@@ -36,14 +52,32 @@ export default function CustomModal() {
     setSelectedFiles(files);
   };
 
-  const uploadImagesToFirebase = async () => {
+  const handleEdit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    if (!editedFolderName || !selectedFiles) {
+      return Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'All fields are required.',
+        showConfirmButton: true,
+      });
+    }
+
+    const editedProfile = {
+      folderName: editedFolderName,
+      selectedFiles,
+    };
+
+    selectedFolderProfile = editedProfile;
+
     if (!selectedFiles) {
       console.error('No files selected');
       return;
     }
 
     try {
-      const folderRef = ref(storage, `${folderName}/`);
+      const folderRef = ref(storage, `${editedFolderName}/`);
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
@@ -54,7 +88,6 @@ export default function CustomModal() {
         const imageUrl = await getDownloadURL(imageRef);
 
         uploadedImageUrls.push(imageUrl);
-        handleClose();
       }
 
       setUploadedImageUrls(uploadedImageUrls);
@@ -74,27 +107,27 @@ export default function CustomModal() {
         generatedQRCodes.push(qrCode);
       }
 
-      setShowFolder(true);
+      Swal.fire({
+        icon: 'success',
+        title: 'Edited!',
+        text: `Data has been Edited.`,
+        showConfirmButton: false,
+        timer: 1000,
+      });
+
     } catch (error) {
       console.error('Error uploading images:', error);
     }
   };
 
-  const handleOpen = () => setOpen(true);
-
-  const handleClose = () => {
-    setOpen(false);
-    setSelectedFiles(null);
-  };
-
-  const folders = () => {
+  const editFolder = () => {
     return (
       <Container>
         <CustomTextField
-          itemID="folder-name"
-          itemLabel="Folder Name"
-          value={folderName}
-          handleChange={(e) => setFolderName(e.target.value)}
+          itemID="edited-folder-name"
+          itemLabel="Edited Folder Name"
+          value={editedFolderName}
+          handleChange={(e) => setEditedFolderName(e.target.value)}
         />
         <AddImgBtn onClick={handleAddImgClick}>Add Images</AddImgBtn>
         <input
@@ -106,47 +139,29 @@ export default function CustomModal() {
           onChange={handleImageChange}
           multiple
         />
-        <Grid
-          container
-          display="flex"
-          flexDirection="row"
-          wrap="nowrap"
-          gap={4}
-          maxWidth="90%"
-        >
-          {selectedFiles &&
-            Array.from(selectedFiles).map((file, index) => (
-              <ImagePreview key={index} src={URL.createObjectURL(file)} alt={file.name} />
-            ))
-          }
-        </Grid>
-        <ImageUploadBtn variant="contained" onClick={uploadImagesToFirebase}>
-          Upload The Folder
+        <ImageUploadBtn variant="contained" onClick={handleEdit}>
+          Edit
         </ImageUploadBtn>
+        <CancelBtn variant="contained" onClick={handleCancelClick}>
+          Cancel
+        </CancelBtn>
       </Container>
-    )
-  }
+    );
+  };
 
   return (
     <>
-      <AddFolderBtn onClick={handleOpen}>Open modal</AddFolderBtn>
+
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        {folders()}
+        {editFolder()}
       </Modal>
-      {showFolder &&
-        <Grid
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Button>Hello</Button>
-        </Grid>
-      }
     </>
   );
-}
+};
+
+export default Edit;
