@@ -4,8 +4,7 @@ import {
   Typography,
   styled,
 } from '@mui/material'
-
-import { theme } from "../../theme/pallete";
+import { theme } from '../../../theme/pallete';
 
 const {
   secondary,

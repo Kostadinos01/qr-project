@@ -13,7 +13,7 @@ import {
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import ProfileOverview from '../FolderProfileOverview';
+import FolderProfileOverview from '../FolderProfileOverview';
 import { FolderProfile } from '../../../types/Common';
 
 interface Props {
@@ -22,7 +22,7 @@ interface Props {
   handleEdit: (id: string) => void;
 }
 
-const Profiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => {
+const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => {
   const [anchorEls, setAnchorEls] = useState<{ [key: string]: null | HTMLElement }>({});
 
   const open = Boolean(anchorEls);
@@ -94,11 +94,11 @@ const Profiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => {
                   </Menu></>
               }
             />
-            < ProfileOverview
+            <FolderProfileOverview
               folderName={profile.folderName}
-              folderImgs={profile.folderImgs}
+              selectedFiles={profile.selectedFiles}
             >
-            </ProfileOverview>
+            </FolderProfileOverview>
           </CustomCard>
         ))
       ) : (
@@ -108,4 +108,4 @@ const Profiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => {
   );
 }
 
-export default Profiles;
+export default FolderProfiles;

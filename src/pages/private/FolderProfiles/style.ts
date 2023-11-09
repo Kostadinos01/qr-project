@@ -3,8 +3,7 @@ import {
   Box,
   Card,
 } from '@mui/material'
-
-import { theme } from "../../theme/pallete";
+import { theme } from '../../../theme/pallete';
 
 const {
   secondary,
