@@ -14,7 +14,7 @@ import { FolderProfile } from '../../types/Common';
 import { storage } from '../../firebase/firebase';
 import Profiles from '../../pages/private/FolderProfiles';
 
-const Fibep2023 = () => {
+const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
   const [selectedFolderProfile, setSelectedFolderProfile] = useState<FolderProfile | null>(null);
   const [isAdding, setIsAdding] = useState<boolean>(false);
@@ -120,4 +120,4 @@ const Fibep2023 = () => {
   );
 };
 
-export default Fibep2023;
+export default ImgsFolderDashboard;
