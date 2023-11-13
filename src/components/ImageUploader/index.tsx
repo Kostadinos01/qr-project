@@ -14,7 +14,6 @@ import {
   QRContainer,
 } from "./style";
 import Logout from "../Logout";
-import CustomModal from "../Modal";
 import { storage } from "../../firebase/firebase";
 
 const ImageUpload: React.FC = () => {
@@ -120,7 +119,6 @@ const ImageUpload: React.FC = () => {
         <QRGeneratorBtn variant="contained" onClick={generateQRCodes}>
           Generate QR Codes
         </QRGeneratorBtn>
-        <CustomModal />
         {qrCodes.map((qr, index) => (
           <QRContainer key={index}>
             <QRCodeImage

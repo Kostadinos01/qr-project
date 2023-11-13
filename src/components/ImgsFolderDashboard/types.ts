@@ -4,7 +4,6 @@ import { FolderProfile } from "../../types/Common";
 export interface AddProfilePageProps {
   folderProfiles: FolderProfile[];
   setFolderProfiles: Dispatch<SetStateAction<FolderProfile[]>>;
-  setIsAdding: (arg: boolean) => void;
   getFolderProfiles: () => void;
 }
 

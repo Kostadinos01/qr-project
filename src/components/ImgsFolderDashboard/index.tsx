@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Add from './Add';
 import Edit from './Edit';
-import { BtnContainer, AddProfileBtnContainer, AddProfileBtn } from './style';
-import { FaPlus } from 'react-icons/fa';
 import {
   ref,
   getDownloadURL,
@@ -17,13 +15,7 @@ import Profiles from '../../pages/private/FolderProfiles';
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
   const [selectedFolderProfile, setSelectedFolderProfile] = useState<FolderProfile | null>(null);
-  const [isAdding, setIsAdding] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-
-  const handleAddProfileClick = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setIsAdding(true);
-  };
 
   const getFolders = async () => {
     try {
@@ -83,29 +75,19 @@ const ImgsFolderDashboard = () => {
 
   return (
     <>
-      {!isAdding && !isEditing && (
+      {!isEditing && (
         <>
-          <BtnContainer>
-            <AddProfileBtnContainer>
-              <AddProfileBtn onClick={handleAddProfileClick}>
-                <FaPlus />
-              </AddProfileBtn>
-            </AddProfileBtnContainer>
-          </BtnContainer>
           <Profiles
             handleDelete={handleDelete}
             handleEdit={handleEdit}
             folderProfiles={folderProfiles}
           />
+          <Add
+            folderProfiles={folderProfiles}
+            setFolderProfiles={setFolderProfiles}
+            getFolderProfiles={getFolders}
+          />
         </>
-      )}
-      {isAdding && (
-        <Add
-          folderProfiles={folderProfiles}
-          setFolderProfiles={setFolderProfiles}
-          setIsAdding={setIsAdding}
-          getFolderProfiles={getFolders}
-        />
       )}
       {isEditing && (
         <Edit

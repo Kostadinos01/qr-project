@@ -133,9 +133,11 @@ const Btn = styled(Button)({
   color: warning.main,
   backgroundColor: primary.main,
   fontWeight: "900",
-  borderRadius: "5px",
+  borderRadius: "25px",
   textAlign: "center",
   fontSize: "14px",
+  margin: "auto",
+  display: "flex",
 
   "&:hover": {
     backgroundColor: primary.dark,

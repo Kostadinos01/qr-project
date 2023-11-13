@@ -4,6 +4,7 @@ import QRCode from "qrcode";
 import { Grid, Modal } from '@mui/material';
 import {
   AddImgBtn,
+  Btn,
   CancelBtn,
   Container,
   ImagePreview,
@@ -13,19 +14,23 @@ import { storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ImageUploadBtn } from '../ImageUploader/style';
 import CustomTextField from '../TextField';
-import { AddFolderBtn } from '../Modal/style';
 
 const Add = ({
   folderProfiles,
-  setIsAdding,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+  const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const handleOpen = () => setOpen(true);
+  const handleOpen = (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
+    setIsAdding(true);
+    setOpen(true)
+  };
 
   const handleClose = () => {
     setOpen(false);
@@ -167,15 +172,17 @@ const Add = ({
 
   return (
     <>
-      <AddFolderBtn onClick={handleOpen}>Open modal</AddFolderBtn>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        {folders()}
-      </Modal>
+      <Btn onClick={handleOpen}>Add Folder</Btn>
+      {isAdding && (
+        <Modal
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
+        >
+          {folders()}
+        </Modal>
+      )}
     </>
   );
 };
