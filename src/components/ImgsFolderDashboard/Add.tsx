@@ -8,11 +8,11 @@ import {
   CancelBtn,
   Container,
   ImagePreview,
+  ImageUploadBtn,
 } from './style';
 import { AddProfilePageProps } from './types';
 import { storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ImageUploadBtn } from '../ImageUploader/style';
 import CustomTextField from '../TextField';
 
 const Add = ({
@@ -147,11 +147,19 @@ const Add = ({
         />
         <Grid
           container
+          sx={{
+            flexDirection: {
+              xs: 'column',
+              md: 'column',
+              lg: 'row',
+              xl: 'row',
+            },
+            flexWrap: 'wrap'
+          }}
           display="flex"
-          flexDirection="row"
-          wrap="nowrap"
-          gap={4}
-          maxWidth="90%"
+          justifyContent="center"
+          margin="auto"
+          width="85%"
         >
           {selectedFiles &&
             Array.from(selectedFiles).map((file, index) => (
@@ -159,12 +167,20 @@ const Add = ({
             ))
           }
         </Grid>
-        <ImageUploadBtn variant="contained" onClick={handleAdd}>
-          Add
-        </ImageUploadBtn>
-        <CancelBtn variant="contained" onClick={handleCancelClick}>
-          Cancel
-        </CancelBtn>
+        <Grid
+          container
+          flexDirection="row"
+          display="flex"
+          justifyContent="center"
+          gap={4}
+        >
+          <ImageUploadBtn variant="contained" onClick={handleAdd}>
+            Add
+          </ImageUploadBtn>
+          <CancelBtn variant="contained" onClick={handleCancelClick}>
+            Cancel
+          </CancelBtn>
+        </Grid>
       </Container>
     )
   }
