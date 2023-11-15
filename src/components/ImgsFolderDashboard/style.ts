@@ -11,15 +11,6 @@ const {
   error,
 } = theme.palette;
 
-const MainContainer = styled(Grid)({
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  flexDirection: 'column',
-  maxWidth: '100vh',
-  height: 'auto',
-});
-
 const ProfilesContainer = styled(Grid)({
   backgroundColor: primary.light,
 });
@@ -28,17 +19,16 @@ const Container = styled(Grid)({
   backgroundColor: warning.dark,
   display: 'flex',
   justifyContent: 'center',
-  height: 'fit-content',
+  maxHeight: '90vh',
   border: `3px solid ${warning.dark}`,
   borderRadius: "15px",
-  padding: "10px 20px",
+  padding: "10px 15px",
   zIndex: 1,
   width: "50%",
   flexDirection: "column",
-  position: 'sticky',
   overflowY: 'scroll',
-  top: '1%',
-  left: '15%',
+  margin: "auto",
+  marginTop: "50px",
 });
 
 const ImagePreview = styled("img")({
@@ -47,27 +37,8 @@ const ImagePreview = styled("img")({
   justifyContent: "center",
   margin: "auto",
   display: "flex",
-  marginTop: "50px",
-  marginBottom: "50px",
-});
-
-const ExtraFieldsBtn = styled(Button)({
-  color: warning.main,
-  backgroundColor: primary.main,
-  fontWeight: "900",
-  borderRadius: "5px",
-  textAlign: "center",
-  fontSize: "16px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  margin: "auto",
-  marginTop: "30px",
-  marginBottom: "50px",
-
-  "&:hover": {
-    backgroundColor: primary.dark,
-  },
+  marginTop: "20px",
+  marginBottom: "20px",
 });
 
 const AddImgBtn = styled(Button)({
@@ -131,11 +102,9 @@ const CancelBtn = styled(Button)({
 });
 
 export {
-  MainContainer,
   ProfilesContainer,
   Container,
   ImagePreview,
-  ExtraFieldsBtn,
   AddImgBtn,
   Btn,
   ImageUploadBtn,

@@ -42,6 +42,7 @@ const Add = ({
   const handleCancelClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
+    setSelectedFiles(null);
     setIsAdding(false);
   }
 
@@ -111,6 +112,7 @@ const Add = ({
         });
 
         generatedQRCodes.push(qrCode);
+        setIsAdding(false)
       }
 
       Swal.fire({
@@ -129,22 +131,36 @@ const Add = ({
   const folders = () => {
     return (
       <Container>
-        <CustomTextField
-          itemID="folder-name"
-          itemLabel="Folder Name"
-          value={folderName}
-          handleChange={(e) => setFolderName(e.target.value)}
-        />
-        <AddImgBtn onClick={handleAddImgClick}>Add Images</AddImgBtn>
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          ref={inputFileRef}
-          style={{ display: 'none' }}
-          onChange={handleImageChange}
-          multiple
-        />
+        <Grid
+          container
+          display="flex"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+          marginTop="20px"
+          gap={4}
+        >
+          <Grid item>
+            <CustomTextField
+              itemID="folder-name"
+              itemLabel="Folder Name"
+              value={folderName}
+              handleChange={(e) => setFolderName(e.target.value)}
+            />
+          </Grid>
+          <Grid item>
+            <AddImgBtn onClick={handleAddImgClick}>Add Images</AddImgBtn>
+            <input
+              type="file"
+              accept="image/*"
+              capture="environment"
+              ref={inputFileRef}
+              style={{ display: 'none' }}
+              onChange={handleImageChange}
+              multiple
+            />
+          </Grid>
+        </Grid>
         <Grid
           container
           sx={{
@@ -159,7 +175,6 @@ const Add = ({
           display="flex"
           justifyContent="center"
           margin="auto"
-          width="85%"
         >
           {selectedFiles &&
             Array.from(selectedFiles).map((file, index) => (
