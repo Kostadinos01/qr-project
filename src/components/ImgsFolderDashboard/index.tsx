@@ -2,15 +2,11 @@ import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import Add from './Add';
 import Edit from './Edit';
-import {
-  ref,
-  getDownloadURL,
-  deleteObject,
-  listAll,
-} from 'firebase/storage';
+
 import { FolderProfile } from '../../types/Common';
-import { storage } from '../../firebase/firebase';
+import { db } from '../../firebase/firebase';
 import Profiles from '../../pages/private/FolderProfiles';
+import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
@@ -19,15 +15,10 @@ const ImgsFolderDashboard = () => {
 
   const getFolders = async () => {
     try {
-      const folderRef = ref(storage, "FolderProfiles");
-      const listResult = await listAll(folderRef);
-
-      const profiles = await Promise.all(
-        listResult.items.map(async (item) => {
-          const url = await getDownloadURL(item);
-          return { id: item.name, url } as FolderProfile;
-        })
-      );
+      const querySnapshot = await getDocs(collection(db, "FolderProfiles"));
+      const profiles = querySnapshot.docs.map((doc) => (
+        { id: doc.id, ...doc.data() }
+      )) as FolderProfile[];
 
       setFolderProfiles(profiles);
     } catch (error) {
@@ -56,18 +47,17 @@ const ImgsFolderDashboard = () => {
       cancelButtonText: 'No, cancel!',
     }).then(async (result) => {
       if (result.value) {
-        const fileRef = ref(storage, `FolderProfiles/${id}`);
-        await deleteObject(fileRef);
+        deleteDoc(doc(db, "FolderProfiles", id));
 
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
-          text: 'Data has been deleted.',
+          text: "Data has been deleted.",
           showConfirmButton: false,
           timer: 1500,
         });
 
-        const profilesCopy = folderProfiles.filter((profile) => profile.id !== id);
+        const profilesCopy = folderProfiles.filter(profile => profile.id !== id);
         setFolderProfiles(profilesCopy);
       }
     });

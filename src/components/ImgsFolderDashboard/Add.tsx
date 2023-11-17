@@ -11,12 +11,15 @@ import {
   ImageUploadBtn,
 } from './style';
 import { AddProfilePageProps } from './types';
-import { storage } from '../../firebase/firebase';
+import { db, storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import CustomTextField from '../TextField';
+import { addDoc, collection } from 'firebase/firestore';
 
 const Add = ({
   folderProfiles,
+  setFolderProfiles,
+  getFolderProfiles,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -60,8 +63,6 @@ const Add = ({
   };
 
   const handleAdd = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
     if (!folderName || !selectedFiles) {
       return Swal.fire({
         icon: 'error',
@@ -85,6 +86,11 @@ const Add = ({
 
     try {
       const folderRef = ref(storage, `${folderName}/`);
+
+      await addDoc(collection(db, "FolderProfiles"), {
+        folderName,
+        folderPath: folderRef.fullPath,
+      });
 
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
@@ -112,7 +118,7 @@ const Add = ({
         });
 
         generatedQRCodes.push(qrCode);
-        setIsAdding(false)
+        setIsAdding(false);
       }
 
       Swal.fire({

@@ -54,52 +54,51 @@ const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => 
     >
       {folderProfiles ? (
         folderProfiles.map((profile) => (
-          <FolderProfileOverview
-            folderName={profile.folderName}
-            selectedFiles={profile.selectedFiles}
-          >
-            <CustomCard key={profile.id}>
-              <CardHeader
-                action={
-                  <>
-                    <IconButton
-                      id="basic-button"
-                      aria-controls={open ? 'basic-menu' : undefined}
-                      aria-haspopup="true"
-                      aria-expanded={open ? 'true' : undefined}
-                      onClick={(event) => handleOpenClick(event, profile.id!)}
-                    >
-                      <MoreVertIcon />
-                    </IconButton><Menu
-                      id="basic-menu"
-                      anchorEl={anchorEls[profile.id!]}
-                      open={Boolean(anchorEls[profile.id!])}
-                      onClose={() => handleClose(profile.id!)}
-                      MenuListProps={{
-                        'aria-labelledby': 'basic-button',
+          <CustomCard key={profile.id}>
+            <CardHeader
+              action={
+                <>
+                  <IconButton
+                    id="basic-button"
+                    aria-controls={open ? 'basic-menu' : undefined}
+                    aria-haspopup="true"
+                    aria-expanded={open ? 'true' : undefined}
+                    onClick={(event) => handleOpenClick(event, profile.id!)}
+                  >
+                    <MoreVertIcon />
+                  </IconButton><Menu
+                    id="basic-menu"
+                    anchorEl={anchorEls[profile.id!]}
+                    open={Boolean(anchorEls[profile.id!])}
+                    onClose={() => handleClose(profile.id!)}
+                    MenuListProps={{
+                      'aria-labelledby': 'basic-button',
+                    }}
+                  >
+                    <MenuItem
+                      onClick={() => {
+                        handleClose(profile.id!);
+                        handleEdit(profile.id!);
                       }}
                     >
-                      <MenuItem
-                        onClick={() => {
-                          handleClose(profile.id!);
-                          handleEdit(profile.id!);
-                        }}
-                      >
-                        <EditIcon />
-                      </MenuItem>
-                      <MenuItem
-                        onClick={() => {
-                          handleClose(profile.id!);
-                          handleDelete(profile.id!);
-                        }}
-                      >
-                        <DeleteIcon />
-                      </MenuItem>
-                    </Menu></>
-                }
-              />
-            </CustomCard>
-          </FolderProfileOverview>
+                      <EditIcon />
+                    </MenuItem>
+                    <MenuItem
+                      onClick={() => {
+                        handleClose(profile.id!);
+                        handleDelete(profile.id!);
+                      }}
+                    >
+                      <DeleteIcon />
+                    </MenuItem>
+                  </Menu></>
+              }
+            />
+            <FolderProfileOverview
+              folderName={profile.folderName}
+              selectedFiles={profile.selectedFiles}
+            ></FolderProfileOverview>
+          </CustomCard>
         ))
       ) : (
         <Typography marginTop="200px">No Profiles Exist</Typography>
