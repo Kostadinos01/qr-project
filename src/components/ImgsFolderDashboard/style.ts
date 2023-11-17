@@ -67,6 +67,7 @@ const Btn = styled(Button)({
   fontSize: "14px",
   margin: "auto",
   display: "flex",
+  marginTop: "30px",
 
   "&:hover": {
     backgroundColor: primary.dark,

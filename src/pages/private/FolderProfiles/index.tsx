@@ -97,7 +97,9 @@ const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => 
             <FolderProfileOverview
               folderName={profile.folderName}
               selectedFiles={profile.selectedFiles}
-            ></FolderProfileOverview>
+            >
+
+            </FolderProfileOverview>
           </CustomCard>
         ))
       ) : (
