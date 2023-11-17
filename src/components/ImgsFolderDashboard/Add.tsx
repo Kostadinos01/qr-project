@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
-import QRCode from "qrcode";
 import { Grid, Modal } from '@mui/material';
 import {
   AddImgBtn,
@@ -15,6 +14,7 @@ import { db, storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import CustomTextField from '../TextField';
 import { addDoc, collection } from 'firebase/firestore';
+import { useQR } from '../../hooks/useQR';
 
 const Add = ({
   folderProfiles,
@@ -22,9 +22,10 @@ const Add = ({
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
 
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
+
+  const { uploadedImageUrls, setUploadedImageUrls } = useQR();
 
   const handleOpen = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -102,22 +103,6 @@ const Add = ({
       }
 
       setUploadedImageUrls(uploadedImageUrls);
-
-      const generatedQRCodes: string[] = [];
-
-      for (const imageUrl of uploadedImageUrls) {
-        const qrCode = await QRCode.toDataURL(imageUrl, {
-          width: 800,
-          margin: 2,
-          color: {
-            dark: "#000",
-            light: "#EEEEEEFF",
-          },
-        });
-
-        generatedQRCodes.push(qrCode);
-        setIsAdding(false);
-      }
 
       Swal.fire({
         icon: 'success',
