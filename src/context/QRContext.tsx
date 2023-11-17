@@ -1,70 +1,63 @@
 import React, {
-  startTransition,
   createContext,
   useState,
-  useEffect,
 } from "react";
-
-import Swal from 'sweetalert2';
-
-import { User } from "firebase/auth";
-import { useNavigate } from "react-router-dom";
-import { SignOutUser, userStateListener } from "../firebase/firebase";
-import { PATHS } from '../constants/Common';
+import QRCode from "qrcode";
 import { ChildrenPropTypes } from "../types/Common";
 
-export const QRContext = createContext({
-  currentUser: {} as User | null,
-  setCurrentUser: (_user: User) => { },
-  signOut: () => { },
+export const QRContext = createContext<{
+  generateQRCodes: () => void;
+  uploadedImageUrls: string[];
+  setUploadedImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
+  qrCodes: string[];
+  setQrCodes: React.Dispatch<React.SetStateAction<string[]>>;
+}>({
+  generateQRCodes: () => { },
+  uploadedImageUrls: [],
+  setUploadedImageUrls: () => { },
+  qrCodes: [],
+  setQrCodes: () => { },
 });
 
-export const AuthProvider = ({ children }: ChildrenPropTypes) => {
-  const [currentUser, setCurrentUser] = useState<User | null>(null);
+export const QRProvider = ({ children }: ChildrenPropTypes) => {
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+  const [qrCodes, setQrCodes] = useState<string[]>([]);
 
-  const navigate = useNavigate();
+  const generateQRCodes = async () => {
+    if (uploadedImageUrls.length === 0) {
+      console.error("No images to generate QR codes for");
+      return;
+    }
 
-  useEffect(() => {
-    const unsubscribe = userStateListener((user) => {
-      if (user) {
-        setCurrentUser(user)
-      }
-    });
-    return unsubscribe
-  }, [setCurrentUser]);
+    try {
+      const generatedQRCodes: string[] = [];
 
-  // As soon as setting the current user to null, 
-  // the user will be redirected to the home page. 
-  const signOut = () => {
-    Swal.fire({
-      icon: 'question',
-      title: 'Logging Out',
-      text: 'Are you sure you want to log out?',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-    }).then(result => {
-      if (result.value) {
-        Swal.fire({
-          timer: 1000,
-          showConfirmButton: false,
-          willOpen: () => {
-            Swal.showLoading();
-          },
-          willClose: () => {
-            SignOutUser()
-            setCurrentUser(null)
-            startTransition(() => navigate(PATHS.login))
+      for (const imageUrl of uploadedImageUrls) {
+        const qrCode = await QRCode.toDataURL(imageUrl, {
+          width: 800,
+          margin: 2,
+          color: {
+            dark: "#000",
+            light: "#EEEEEEFF",
           },
         });
+
+        generatedQRCodes.push(qrCode);
       }
-    });
-  }
+
+      setQrCodes(generatedQRCodes);
+    } catch (error) {
+      console.error("Error generating QR codes:", error);
+    }
+  };
 
   const value = {
-    currentUser,
-    setCurrentUser,
-    signOut,
-  }
+    generateQRCodes,
+    uploadedImageUrls,
+    setUploadedImageUrls,
+    qrCodes,
+    setQrCodes,
+  };
 
   return <QRContext.Provider value={value}>{children}</QRContext.Provider>;
 }

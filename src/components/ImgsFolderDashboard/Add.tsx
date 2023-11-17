@@ -18,8 +18,6 @@ import { addDoc, collection } from 'firebase/firestore';
 
 const Add = ({
   folderProfiles,
-  setFolderProfiles,
-  getFolderProfiles,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
