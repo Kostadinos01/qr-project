@@ -8,10 +8,11 @@ import {
   OverviewContainer,
   Title,
   Subtitle,
-  ImagePreview,
 } from './style';
 import { FolderProfile } from '../../../types/Common';
 import { Divider } from '@mui/material';
+import { QRCodeImage } from '../FolderProfiles/style';
+import { useQR } from '../../../hooks/useQR';
 
 export default function FolderProfileOverview({
   children,
@@ -19,6 +20,8 @@ export default function FolderProfileOverview({
   selectedFiles,
 }: FolderProfile) {
   const [open, setOpen] = useState(false);
+
+  const { qrCodes } = useQR();
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -36,8 +39,11 @@ export default function FolderProfileOverview({
             <Subtitle>{folderName}</Subtitle>
             <Divider />
             {selectedFiles &&
-              Array.from(selectedFiles).map((file, index) => (
-                <ImagePreview key={index} src={URL.createObjectURL(file)} alt={file.name} />
+              qrCodes.map((qr, index) => (
+                <QRCodeImage
+                  src={qr}
+                  alt={`QR Code ${index}`}
+                />
               ))
             }
           </OverviewContainer>

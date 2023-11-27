@@ -25,7 +25,11 @@ const Add = ({
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const { uploadedImageUrls, setUploadedImageUrls } = useQR();
+  const {
+    uploadedImageUrls,
+    setUploadedImageUrls,
+    generateQRCodes,
+  } = useQR();
 
   const handleOpen = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -103,6 +107,10 @@ const Add = ({
       }
 
       setUploadedImageUrls(uploadedImageUrls);
+
+      generateQRCodes();
+
+      handleClose();
 
       Swal.fire({
         icon: 'success',
