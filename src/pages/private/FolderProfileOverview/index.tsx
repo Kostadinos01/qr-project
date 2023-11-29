@@ -8,6 +8,7 @@ import {
   OverviewContainer,
   Title,
   Subtitle,
+  ImagePreview,
 } from './style';
 import { FolderProfile } from '../../../types/Common';
 import { Divider } from '@mui/material';
@@ -39,14 +40,19 @@ export default function FolderProfileOverview({
             <Subtitle>{folderName}</Subtitle>
             <Divider />
             {selectedFiles &&
-              qrCodes.map((qr, index) => (
-                <QRCodeImage
-                  src={qr}
-                  alt={`QR Code ${index}`}
-                />
+              Array.from(selectedFiles).map((file, index) => (
+                <ImagePreview key={index} src={URL.createObjectURL(file)} alt={file.name} />
               ))
             }
           </OverviewContainer>
+          {
+            qrCodes.map((qr, index) => (
+              <QRCodeImage
+                src={qr}
+                alt={`QR Code ${index}`}
+              />
+            ))
+          }
         </Container>
       </Modal>
     </>

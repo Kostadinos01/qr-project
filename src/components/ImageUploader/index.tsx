@@ -15,12 +15,14 @@ import {
 } from "./style";
 import Logout from "../Logout";
 import { storage } from "../../firebase/firebase";
+import LoadingSpinner from "../LoadingSpinner";
 
 const ImageUpload: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
   const [qrCodes, setQrCodes] = useState<string[]>([]);
   const [successUploading, setSuccessUploading] = useState<boolean>(false);
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
 
@@ -45,6 +47,8 @@ const ImageUpload: React.FC = () => {
     }
 
     try {
+      setLoading(true);
+
       const uploadedImageUrls: string[] = [];
 
       for (let i = 0; i < selectedFiles.length; i++) {
@@ -60,6 +64,8 @@ const ImageUpload: React.FC = () => {
 
       setUploadedImageUrls(uploadedImageUrls);
       setSuccessUploading(true);
+
+      setLoading(false);
     } catch (error) {
       console.error("Error uploading images:", error);
     }
@@ -116,6 +122,9 @@ const ImageUpload: React.FC = () => {
         {successUploading && (
           <Paragraph>Your uploading was successful!!</Paragraph>
         )}
+        {loading && (
+          <LoadingSpinner />
+        )}
         <QRGeneratorBtn variant="contained" onClick={generateQRCodes}>
           Generate QR Codes
         </QRGeneratorBtn>
@@ -130,7 +139,7 @@ const ImageUpload: React.FC = () => {
               }}
             />
             <DownloadLink href={qr} download={`qrcode_${index}.png`}>
-              Download QR Code {index}
+              Download QR
             </DownloadLink>
           </QRContainer>
         ))}
