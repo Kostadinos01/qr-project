@@ -12,10 +12,12 @@ import {
   QRCodeImage,
   DownloadLink,
   QRContainer,
+  ClearAllBtn,
 } from "./style";
 import Logout from "../Logout";
 import { storage } from "../../firebase/firebase";
 import LoadingSpinner from "../LoadingSpinner";
+import { Grid } from "@mui/material";
 
 const ImageUpload: React.FC = () => {
   const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
@@ -25,6 +27,12 @@ const ImageUpload: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
+
+  const handleClearAllBtnClick = () => {
+    setQrCodes([]);
+    setUploadedImageUrls([]);
+    setSuccessUploading(false);
+  }
 
   const handleAddImgClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -107,15 +115,30 @@ const ImageUpload: React.FC = () => {
         <Subtitle>
           Please select images, upload them, and generate QR codes. You can also download the generated QR codes.
         </Subtitle>
-        <AddImgBtn onClick={handleAddImgClick}>Add Image</AddImgBtn>
-        <input
-          type="file"
-          accept="image/*"
-          capture="environment"
-          ref={inputFileRef}
-          style={{ display: 'none' }}
-          onChange={handleImageChange}
-        />
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 8,
+          }}
+        >
+          <AddImgBtn onClick={handleAddImgClick}>Add Image</AddImgBtn>
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            ref={inputFileRef}
+            style={{ display: 'none' }}
+            onChange={handleImageChange}
+          />
+          <ClearAllBtn
+            onClick={handleClearAllBtnClick}
+          >
+            CLEAR ALL
+          </ClearAllBtn>
+        </Grid>
         <ImageUploadBtn variant="contained" onClick={uploadImagesToFirebase}>
           Upload Images to Firebase
         </ImageUploadBtn>
