@@ -20,7 +20,7 @@ const Add = ({
   folderProfiles,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
 
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
@@ -62,10 +62,20 @@ const Add = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    setSelectedFiles(files);
+    if (files) {
+      const selectedFilesArray: File[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        selectedFilesArray.push(files[i]);
+      }
+
+      setSelectedFiles(selectedFilesArray);
+    }
   };
 
   const handleAdd = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault();
+
     if (!folderName || !selectedFiles) {
       return Swal.fire({
         icon: 'error',

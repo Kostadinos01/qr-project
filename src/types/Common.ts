@@ -22,5 +22,5 @@ export interface FolderProfile {
   id?: string;
   url?: string;
   folderName: string;
-  selectedFiles: FileList | null;
+  selectedFiles: File[] | null;
 }

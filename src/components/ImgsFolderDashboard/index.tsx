@@ -37,7 +37,7 @@ const ImgsFolderDashboard = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = (id: string) => {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -45,7 +45,7 @@ const ImgsFolderDashboard = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
-    }).then(async (result) => {
+    }).then(result => {
       if (result.value) {
         deleteDoc(doc(db, "FolderProfiles", id));
 

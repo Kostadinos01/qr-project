@@ -17,10 +17,8 @@ import { addDoc, collection } from 'firebase/firestore';
 
 
 const Edit = ({
-  folderProfiles,
   setIsEditing,
   selectedFolderProfile,
-  getFolderProfiles,
 }: EditProfilePageProps) => {
   const [editedFolderName, setEditedFolderName] = useState(selectedFolderProfile?.folderName);
   const [selectedFiles, setSelectedFiles] = useState(selectedFolderProfile?.selectedFiles);
@@ -51,7 +49,15 @@ const Edit = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
-    setSelectedFiles(files);
+    if (files) {
+      const selectedFilesArray: File[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        selectedFilesArray.push(files[i]);
+      }
+
+      setSelectedFiles(selectedFilesArray);
+    }
   };
 
   const handleEdit = async (e: { preventDefault: () => void; }) => {
@@ -98,6 +104,8 @@ const Edit = ({
       }
 
       setUploadedImageUrls(uploadedImageUrls);
+
+      setIsEditing(false);
 
       const generatedQRCodes: string[] = [];
 
