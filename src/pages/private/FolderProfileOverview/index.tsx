@@ -50,6 +50,10 @@ export default function FolderProfileOverview({
               <QRCodeImage
                 src={qr}
                 alt={`QR Code ${index}`}
+                sx={{
+                  width: "150px",
+                  height: "150px",
+                }}
               />
             ))
           }

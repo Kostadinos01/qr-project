@@ -98,16 +98,17 @@ const Add = ({
     }
 
     try {
-      const folderRef = ref(storage, `${folderName}/`);
-
-      await addDoc(collection(db, "FolderProfiles"), {
-        folderName,
-        folderPath: folderRef.fullPath,
-      });
-
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
+
+        const folderRef = ref(storage, `${folderName}/`);
+
         const imageRef = ref(folderRef, file.name);
+
+        await addDoc(collection(db, "FolderProfiles"), {
+          folderName,
+          folderPath: imageRef.fullPath,
+        });
 
         await uploadBytes(imageRef, file);
 
