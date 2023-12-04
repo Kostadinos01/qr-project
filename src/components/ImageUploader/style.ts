@@ -39,12 +39,12 @@ const Subtitle = styled("h3")({
 
 const AddImgBtn = styled(Button)({
   color: "white",
-  backgroundColor: "#009999",
+  backgroundColor: "#f16e30",
   fontWeight: "800",
   borderRadius: "20px",
 
   "&:hover": {
-    backgroundColor: "#004d4d",
+    backgroundColor: "#e44f25",
   },
 });
 
@@ -57,16 +57,6 @@ const ClearAllBtn = styled(Button)({
   "&:hover": {
     backgroundColor: "#004d4d",
   },
-});
-
-const ImagePreview = styled("img")({
-  maxWidth: "250px",
-  maxHeight: "250px",
-  justifyContent: "center",
-  margin: "auto",
-  display: "flex",
-  marginTop: "50px",
-  marginBottom: "50px",
 });
 
 const ImageUploadBtn = styled(Button)({
@@ -86,17 +76,6 @@ const Paragraph = styled("h3")({
   fontWeight: "800",
   fontSize: "18px",
   marginBottom: "20px",
-});
-
-const QRGeneratorBtn = styled(Button)({
-  backgroundColor: "#009999",
-  color: "white",
-  fontWeight: "800",
-  borderRadius: "20px",
-
-  '&:hover': {
-    backgroundColor: "#004d4d",
-  },
 });
 
 const QRContainer = styled(Grid)({
@@ -123,10 +102,8 @@ export {
   Subtitle,
   AddImgBtn,
   ClearAllBtn,
-  ImagePreview,
   ImageUploadBtn,
   Paragraph,
-  QRGeneratorBtn,
   QRContainer,
   QRCodeImage,
   DownloadLink,

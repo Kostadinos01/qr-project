@@ -85,18 +85,6 @@ const Add = ({
       });
     }
 
-    const newProfile = {
-      folderName,
-      selectedFiles,
-    };
-
-    folderProfiles.push(newProfile);
-
-    if (!selectedFiles) {
-      console.error('No files selected');
-      return;
-    }
-
     try {
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
@@ -130,9 +118,20 @@ const Add = ({
         showConfirmButton: false,
         timer: 1000,
       });
-
     } catch (error) {
       console.error('Error uploading images:', error);
+    }
+
+    const newProfile = {
+      folderName,
+      selectedFiles,
+    };
+
+    folderProfiles.push(newProfile);
+
+    if (!selectedFiles) {
+      console.error('No files selected');
+      return;
     }
   };
 

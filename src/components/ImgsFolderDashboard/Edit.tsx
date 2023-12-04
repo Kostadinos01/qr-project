@@ -26,6 +26,8 @@ const Edit = ({
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [open, setOpen] = useState<boolean>(true);
 
+  const id = selectedFolderProfile?.id;
+
   const handleClose = () => {
     setOpen(false);
     setSelectedFiles(null);
@@ -71,13 +73,6 @@ const Edit = ({
         showConfirmButton: true,
       });
     }
-
-    const editedProfile = {
-      folderName: editedFolderName,
-      selectedFiles,
-    };
-
-    selectedFolderProfile = editedProfile;
 
     if (!selectedFiles) {
       console.error('No files selected');
@@ -133,6 +128,14 @@ const Edit = ({
     } catch (error) {
       console.error('Error uploading images:', error);
     }
+
+    const editedProfile = {
+      id,
+      folderName: editedFolderName,
+      selectedFiles,
+    };
+
+    selectedFolderProfile = editedProfile;
   };
 
   const editFolder = () => {

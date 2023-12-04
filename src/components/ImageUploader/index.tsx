@@ -1,111 +1,30 @@
-import React, { useRef, useState } from "react";
-import QRCode from "qrcode";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import React from "react";
 import {
   Paragraph,
   Container,
   Title,
   Subtitle,
   AddImgBtn,
-  ImageUploadBtn,
-  QRGeneratorBtn,
   QRCodeImage,
   DownloadLink,
   QRContainer,
   ClearAllBtn,
 } from "./style";
 import Logout from "../Logout";
-import { storage } from "../../firebase/firebase";
 import LoadingSpinner from "../LoadingSpinner";
 import { Grid } from "@mui/material";
+import { useGeneratedQR } from "../../hooks/useGeneratedQR";
 
 const ImageUpload: React.FC = () => {
-  const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
-  const [qrCodes, setQrCodes] = useState<string[]>([]);
-  const [successUploading, setSuccessUploading] = useState<boolean>(false);
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [loading, setLoading] = useState<boolean>(false);
-
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
-
-  const handleClearAllBtnClick = () => {
-    setQrCodes([]);
-    setUploadedImageUrls([]);
-    setSuccessUploading(false);
-  }
-
-  const handleAddImgClick = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-
-    if (inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setSelectedFiles(e.target.files);
-    }
-  };
-
-  const uploadImagesToFirebase = async () => {
-    if (!selectedFiles) {
-      console.error("No files selected");
-      return;
-    }
-
-    try {
-      setLoading(true);
-
-      const uploadedImageUrls: string[] = [];
-
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
-        const imageRef = ref(storage, `images/${file.name}`);
-
-        await uploadBytes(imageRef, file);
-
-        const imageUrl = await getDownloadURL(imageRef);
-
-        uploadedImageUrls.push(imageUrl);
-      }
-
-      setUploadedImageUrls(uploadedImageUrls);
-      setSuccessUploading(true);
-
-      setLoading(false);
-    } catch (error) {
-      console.error("Error uploading images:", error);
-    }
-  };
-
-  const generateQRCodes = async () => {
-    if (uploadedImageUrls.length === 0) {
-      console.error("No images to generate QR codes for");
-      return;
-    }
-
-    try {
-      const generatedQRCodes: string[] = [];
-
-      for (const imageUrl of uploadedImageUrls) {
-        const qrCode = await QRCode.toDataURL(imageUrl, {
-          width: 800,
-          margin: 2,
-          color: {
-            dark: "#000",
-            light: "#EEEEEEFF",
-          },
-        });
-
-        generatedQRCodes.push(qrCode);
-      }
-
-      setQrCodes(generatedQRCodes);
-    } catch (error) {
-      console.error("Error generating QR codes:", error);
-    }
-  };
+  const {
+    handleAddImgClick,
+    handleClearAllBtnClick,
+    handleImageChange,
+    inputFileRef,
+    qrCodes,
+    successUploading,
+    loading,
+  } = useGeneratedQR();
 
   return (
     <>
@@ -139,18 +58,12 @@ const ImageUpload: React.FC = () => {
             CLEAR ALL
           </ClearAllBtn>
         </Grid>
-        <ImageUploadBtn variant="contained" onClick={uploadImagesToFirebase}>
-          Upload Images to Firebase
-        </ImageUploadBtn>
         {successUploading && (
           <Paragraph>Your uploading was successful!!</Paragraph>
         )}
         {loading && (
           <LoadingSpinner />
         )}
-        <QRGeneratorBtn variant="contained" onClick={generateQRCodes}>
-          Generate QR Codes
-        </QRGeneratorBtn>
         {qrCodes.map((qr, index) => (
           <QRContainer key={index}>
             <QRCodeImage

@@ -51,8 +51,8 @@ export default function FolderProfileOverview({
                 src={qr}
                 alt={`QR Code ${index}`}
                 sx={{
-                  width: "150px",
-                  height: "150px",
+                  width: "40px",
+                  height: "40px",
                 }}
               />
             ))

@@ -65,7 +65,7 @@ const ImgsFolderDashboard = () => {
 
   return (
     <>
-      {!isEditing && (
+      {!isEditing ? (
         <>
           <Profiles
             handleDelete={handleDelete}
@@ -78,8 +78,7 @@ const ImgsFolderDashboard = () => {
             getFolderProfiles={getFolders}
           />
         </>
-      )}
-      {isEditing && (
+      ) : (
         <Edit
           folderProfiles={folderProfiles}
           selectedFolderProfile={selectedFolderProfile}
