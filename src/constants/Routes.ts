@@ -13,8 +13,13 @@ interface PlatformRoute<P = {}> {
 export const ROUTES: Array<PlatformRoute<any>> = [
   {
     path: PATHS.root,
+    guard: GuestGuard,
+    component: lazy(() => import("../pages/public/Home")),
+  },
+  {
+    path: PATHS.folders,
     guard: AuthGuard,
-    component: lazy(() => import("../pages/private/Home")),
+    component: lazy(() => import("../pages/private/Folders")),
   },
   {
     path: PATHS.folderProfiles,

@@ -6,7 +6,7 @@ import QRCode from "qrcode";
 import { ChildrenPropTypes } from "../types/Common";
 
 export const QRContext = createContext<{
-  generateQRCodes: () => void;
+  generateQRCodes: (imageUrls: string[]) => void;
   uploadedImageUrls: string[];
   setUploadedImageUrls: React.Dispatch<React.SetStateAction<string[]>>;
   qrCodes: string[];
@@ -23,8 +23,8 @@ export const QRProvider = ({ children }: ChildrenPropTypes) => {
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [qrCodes, setQrCodes] = useState<string[]>([]);
 
-  const generateQRCodes = async () => {
-    if (uploadedImageUrls.length === 0) {
+  const generateQRCodes = async (imageUrls: string[]) => {
+    if (imageUrls.length === 0) {
       console.error("No images to generate QR codes for");
       return;
     }
@@ -32,7 +32,7 @@ export const QRProvider = ({ children }: ChildrenPropTypes) => {
     try {
       const generatedQRCodes: string[] = [];
 
-      for (const imageUrl of uploadedImageUrls) {
+      for (const imageUrl of imageUrls) {
         const qrCode = await QRCode.toDataURL(imageUrl, {
           width: 800,
           margin: 2,

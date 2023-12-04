@@ -7,6 +7,7 @@ import { FolderProfile } from '../../types/Common';
 import { db } from '../../firebase/firebase';
 import Profiles from '../../pages/private/FolderProfiles';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
+import Logout from '../Logout';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
@@ -65,6 +66,7 @@ const ImgsFolderDashboard = () => {
 
   return (
     <>
+      <Logout />
       {!isEditing ? (
         <>
           <Profiles

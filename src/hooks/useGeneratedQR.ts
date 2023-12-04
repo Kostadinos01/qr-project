@@ -7,7 +7,6 @@ import QRCode from "qrcode";
 export const useGeneratedQR = () => {
   const [qrCodes, setQrCodes] = useState<string[]>([]);
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
-  const [successUploading, setSuccessUploading] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
 
   const inputFileRef = useRef<HTMLInputElement | null>(null);
@@ -15,7 +14,6 @@ export const useGeneratedQR = () => {
   const handleClearAllBtnClick = () => {
     setQrCodes([]);
     setUploadedImageUrls([]);
-    setSuccessUploading(false);
   }
 
   const handleAddImgClick = (e: { preventDefault: () => void; }) => {
@@ -60,7 +58,6 @@ export const useGeneratedQR = () => {
 
     if (selectedFiles) {
       try {
-        setSuccessUploading(false);
         setLoading(true);
 
         for (let i = 0; i < selectedFiles.length; i++) {
@@ -75,7 +72,6 @@ export const useGeneratedQR = () => {
         }
 
         setUploadedImageUrls(uploadedImageUrls);
-        setSuccessUploading(true);
         setLoading(false);
 
         await generateQRCodes(uploadedImageUrls);
@@ -91,7 +87,6 @@ export const useGeneratedQR = () => {
     handleImageChange,
     inputFileRef,
     qrCodes,
-    successUploading,
     loading,
   }
 }

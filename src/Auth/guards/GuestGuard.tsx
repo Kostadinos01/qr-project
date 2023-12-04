@@ -14,7 +14,7 @@ export function GuestGuard(props: ChildrenPropTypes) {
   const { currentUser } = useContext(AuthContext)
 
   if (currentUser) {
-    return <Navigate to={PATHS.root} state={{ from: location }} replace />;
+    return <Navigate to={PATHS.folders} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

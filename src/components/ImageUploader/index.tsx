@@ -1,6 +1,5 @@
-import React from "react";
+import React, { startTransition } from "react";
 import {
-  Paragraph,
   Container,
   Title,
   Subtitle,
@@ -10,10 +9,11 @@ import {
   QRContainer,
   ClearAllBtn,
 } from "./style";
-import Logout from "../Logout";
 import LoadingSpinner from "../LoadingSpinner";
-import { Grid } from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import { useGeneratedQR } from "../../hooks/useGeneratedQR";
+import { useNavigate } from "react-router-dom";
+import { PATHS } from "../../constants/Common";
 
 const ImageUpload: React.FC = () => {
   const {
@@ -22,13 +22,18 @@ const ImageUpload: React.FC = () => {
     handleImageChange,
     inputFileRef,
     qrCodes,
-    successUploading,
     loading,
   } = useGeneratedQR();
 
+  const navigate = useNavigate();
+
+  const handleLoginNav = () => {
+    startTransition(() => navigate(PATHS.login))
+  }
+
   return (
     <>
-      <Logout />
+      <Button onClick={handleLoginNav}>Login</Button>
       <Container>
         <Title>Select images and generate QR codes</Title>
         <Subtitle>
@@ -58,9 +63,6 @@ const ImageUpload: React.FC = () => {
             CLEAR ALL
           </ClearAllBtn>
         </Grid>
-        {successUploading && (
-          <Paragraph>Your uploading was successful!!</Paragraph>
-        )}
         {loading && (
           <LoadingSpinner />
         )}

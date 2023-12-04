@@ -12,7 +12,7 @@ export default function AuthGuard(props: ChildrenPropTypes) {
   const navigate = useNavigate();
 
   const navigateToUnauthorized = useCallback(() => {
-    navigate(PATHS.login, { state: { from: location }, replace: true });
+    navigate(PATHS.root, { state: { from: location }, replace: true });
   }, [navigate, location]);
 
   useEffect(() => {

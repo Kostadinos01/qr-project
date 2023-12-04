@@ -71,13 +71,6 @@ const ImageUploadBtn = styled(Button)({
   },
 });
 
-const Paragraph = styled("h3")({
-  color: "white",
-  fontWeight: "800",
-  fontSize: "18px",
-  marginBottom: "20px",
-});
-
 const QRContainer = styled(Grid)({
   marginTop: "30px",
 });
@@ -103,7 +96,6 @@ export {
   AddImgBtn,
   ClearAllBtn,
   ImageUploadBtn,
-  Paragraph,
   QRContainer,
   QRCodeImage,
   DownloadLink,

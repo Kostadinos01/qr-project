@@ -107,7 +107,7 @@ const Add = ({
 
       setUploadedImageUrls(uploadedImageUrls);
 
-      generateQRCodes();
+      generateQRCodes(uploadedImageUrls);
 
       handleClose();
 
