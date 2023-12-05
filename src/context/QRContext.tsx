@@ -20,8 +20,8 @@ export const QRContext = createContext<{
 });
 
 export const QRProvider = ({ children }: ChildrenPropTypes) => {
-  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
   const [qrCodes, setQrCodes] = useState<string[]>([]);
+  const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
 
   const generateQRCodes = async (imageUrls: string[]) => {
     if (imageUrls.length === 0) {

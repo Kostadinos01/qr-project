@@ -121,7 +121,7 @@ const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => 
                     }}
                   />
                   <DownloadLink href={qr} download={`qrcode_${index}.png`}>
-                    Download QR Code {index}
+                    Download QR
                   </DownloadLink>
                 </QRContainer>
               ))}

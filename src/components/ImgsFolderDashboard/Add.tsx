@@ -28,7 +28,6 @@ const Add = ({
 
   const {
     uploadedImageUrls,
-    setUploadedImageUrls,
     generateQRCodes,
   } = useQR();
 
@@ -87,7 +86,7 @@ const Add = ({
     }
 
     try {
-      const uploadedImageUrls = await Promise.all(
+      await Promise.all(
         selectedFiles.map(async (file) => {
           const folderRef = ref(storage, `${folderName}/`);
           const imageRef = ref(folderRef, file.name);
@@ -117,6 +116,7 @@ const Add = ({
     } catch (error) {
       console.error('Error uploading images:', error);
     }
+    generateQRCodes(uploadedImageUrls);
   };
 
   const folders = () => {
