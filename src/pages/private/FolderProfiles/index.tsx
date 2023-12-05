@@ -103,7 +103,7 @@ const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => 
               folderName={profile.folderName}
               selectedFiles={profile.selectedFiles}
             >
-              {qrCodes.map((qr, index) => (
+              {/* {qrCodes.map((qr, index) => (
                 <QRContainer key={index}>
                   <QRCodeImage
                     src={qr}
@@ -117,7 +117,7 @@ const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => 
                     Download QR Code {index}
                   </DownloadLink>
                 </QRContainer>
-              ))}
+              ))} */}
             </FolderProfileOverview>
           </CustomCard>
         ))

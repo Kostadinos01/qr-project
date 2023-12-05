@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useContext, useEffect, useMemo } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { PATHS } from '../../constants/Common';
 import { AuthContext } from '../../context/AuthContext';
@@ -11,15 +11,15 @@ export default function AuthGuard(props: ChildrenPropTypes) {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const navigateToUnauthorized = useCallback(() => {
-    navigate(PATHS.root, { state: { from: location }, replace: true });
+  const navigateToUnauthorized = useMemo(() => {
+    return () => navigate(PATHS.root, { state: { from: location }, replace: true });
   }, [navigate, location]);
 
   useEffect(() => {
     if (!currentUser) {
       navigateToUnauthorized();
     }
-  });
+  }, [currentUser, navigateToUnauthorized]);
 
   return <>{children}</>;
 }

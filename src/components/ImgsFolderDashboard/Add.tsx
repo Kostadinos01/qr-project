@@ -21,7 +21,6 @@ const Add = ({
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
-
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
