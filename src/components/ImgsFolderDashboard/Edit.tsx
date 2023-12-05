@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react';
 import Swal from 'sweetalert2';
-import QRCode from "qrcode";
 import { Grid, Modal } from '@mui/material';
 import {
   AddImgBtn,
@@ -13,14 +12,17 @@ import { db, storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { ImageUploadBtn } from '../ImageUploader/style';
 import CustomTextField from '../TextField';
-import { addDoc, collection } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
 
 
 const Edit = ({
   setIsEditing,
   selectedFolderProfile,
+  folderProfiles,
+  setFolderProfiles,
+  getFolderProfiles,
 }: EditProfilePageProps) => {
-  const [editedFolderName, setEditedFolderName] = useState(selectedFolderProfile?.folderName);
+  const [folderName, setFolderName] = useState(selectedFolderProfile?.folderName);
   const [selectedFiles, setSelectedFiles] = useState(selectedFolderProfile?.selectedFiles);
 
   const [uploadedImageUrls, setUploadedImageUrls] = useState<string[]>([]);
@@ -65,7 +67,7 @@ const Edit = ({
   const handleEdit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    if (!editedFolderName || !selectedFiles) {
+    if (!folderName || !selectedFiles) {
       return Swal.fire({
         icon: 'error',
         title: 'Error!',
@@ -74,21 +76,29 @@ const Edit = ({
       });
     }
 
-    if (!selectedFiles) {
-      console.error('No files selected');
-      return;
-    }
+    const profile = {
+      id,
+      folderName,
+      selectedFiles,
+    };
+
+    const profilesCollection = collection(db, "fibep2023Profiles");
+    const profileDocRef = doc(profilesCollection, id);
+
+    await setDoc(profileDocRef, {
+      ...profile
+    });
+
+    setFolderProfiles(folderProfiles);
+    setIsEditing(false);
+    getFolderProfiles()
 
     try {
-      const folderRef = ref(storage, `${editedFolderName}/`);
-
-      await addDoc(collection(db, "FolderProfiles"), {
-        editedFolderName,
-        folderPath: folderRef.fullPath,
-      });
-
       for (let i = 0; i < selectedFiles.length; i++) {
         const file = selectedFiles[i];
+
+        const folderRef = ref(storage, `${folderName}/`);
+
         const imageRef = ref(folderRef, file.name);
 
         await uploadBytes(imageRef, file);
@@ -100,42 +110,18 @@ const Edit = ({
 
       setUploadedImageUrls(uploadedImageUrls);
 
-      setIsEditing(false);
-
-      const generatedQRCodes: string[] = [];
-
-      for (const imageUrl of uploadedImageUrls) {
-        const qrCode = await QRCode.toDataURL(imageUrl, {
-          width: 800,
-          margin: 2,
-          color: {
-            dark: "#000",
-            light: "#EEEEEEFF",
-          },
-        });
-
-        generatedQRCodes.push(qrCode);
-      }
+      handleClose();
 
       Swal.fire({
         icon: 'success',
-        title: 'Edited!',
-        text: `Data has been Edited.`,
+        title: 'Added!',
+        text: `Data has been Added.`,
         showConfirmButton: false,
         timer: 1000,
       });
-
     } catch (error) {
       console.error('Error uploading images:', error);
     }
-
-    const editedProfile = {
-      id,
-      folderName: editedFolderName,
-      selectedFiles,
-    };
-
-    selectedFolderProfile = editedProfile;
   };
 
   const editFolder = () => {
@@ -154,8 +140,8 @@ const Edit = ({
             <CustomTextField
               itemID="folder-name"
               itemLabel="Folder Name"
-              value={editedFolderName}
-              handleChange={(e) => setEditedFolderName(e.target.value)}
+              value={folderName}
+              handleChange={(e) => setFolderName(e.target.value)}
             />
           </Grid>
           <Grid item>

@@ -18,6 +18,8 @@ import { useQR } from '../../hooks/useQR';
 
 const Add = ({
   folderProfiles,
+  setFolderProfiles,
+  getFolderProfiles,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
@@ -30,6 +32,8 @@ const Add = ({
     generateQRCodes,
   } = useQR();
 
+  const inputFileRef = useRef<HTMLInputElement | null>(null);
+
   const handleOpen = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
@@ -41,8 +45,6 @@ const Add = ({
     setOpen(false);
     setSelectedFiles(null);
   };
-
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const handleCancelClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -85,28 +87,23 @@ const Add = ({
     }
 
     try {
-      for (let i = 0; i < selectedFiles.length; i++) {
-        const file = selectedFiles[i];
+      const uploadedImageUrls = await Promise.all(
+        selectedFiles.map(async (file) => {
+          const folderRef = ref(storage, `${folderName}/`);
+          const imageRef = ref(folderRef, file.name);
+          await uploadBytes(imageRef, file);
+          return getDownloadURL(imageRef);
+        })
+      );
 
-        const folderRef = ref(storage, `${folderName}/`);
+      await addDoc(collection(db, "FolderProfiles"), {
+        folderName,
+        uploadedImageUrls,
+      });
 
-        const imageRef = ref(folderRef, file.name);
-
-        await addDoc(collection(db, "FolderProfiles"), {
-          folderName,
-          folderPath: imageRef.fullPath,
-        });
-
-        await uploadBytes(imageRef, file);
-
-        const imageUrl = await getDownloadURL(imageRef);
-
-        uploadedImageUrls.push(imageUrl);
-      }
-
-      setUploadedImageUrls(uploadedImageUrls);
-
-      generateQRCodes(uploadedImageUrls);
+      setFolderProfiles(folderProfiles);
+      setIsAdding(false);
+      getFolderProfiles();
 
       handleClose();
 
@@ -119,18 +116,6 @@ const Add = ({
       });
     } catch (error) {
       console.error('Error uploading images:', error);
-    }
-
-    const newProfile = {
-      folderName,
-      selectedFiles,
-    };
-
-    folderProfiles.push(newProfile);
-
-    if (!selectedFiles) {
-      console.error('No files selected');
-      return;
     }
   };
 

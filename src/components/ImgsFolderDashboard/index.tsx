@@ -7,6 +7,7 @@ import { FolderProfile } from '../../types/Common';
 import { db } from '../../firebase/firebase';
 import Profiles from '../../pages/private/FolderProfiles';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
+import { deleteObject, getStorage, listAll, ref } from 'firebase/storage';
 import Logout from '../Logout';
 
 const ImgsFolderDashboard = () => {
@@ -38,7 +39,7 @@ const ImgsFolderDashboard = () => {
     setIsEditing(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     Swal.fire({
       icon: 'warning',
       title: 'Are you sure?',
@@ -46,19 +47,28 @@ const ImgsFolderDashboard = () => {
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, cancel!',
-    }).then(result => {
+    }).then(async (result) => {
       if (result.value) {
-        deleteDoc(doc(db, "FolderProfiles", id));
+        await deleteDoc(doc(db, 'FolderProfiles', id));
+
+        const storage = getStorage();
+        const folderRef = ref(storage, id);
+
+        const items = await listAll(folderRef);
+
+        items.items.forEach(async (itemRef) => {
+          await deleteObject(itemRef);
+        });
 
         Swal.fire({
           icon: 'success',
           title: 'Deleted!',
-          text: "Data has been deleted.",
+          text: 'Data and folder have been deleted.',
           showConfirmButton: false,
           timer: 1500,
         });
 
-        const profilesCopy = folderProfiles.filter(profile => profile.id !== id);
+        const profilesCopy = folderProfiles.filter((profile) => profile.id !== id);
         setFolderProfiles(profilesCopy);
       }
     });
