@@ -17,18 +17,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import FolderProfileOverview from '../FolderProfileOverview';
 import { FolderProfile } from '../../../types/Common';
 import { QRContainer, DownloadLink } from '../../../components/ImageUploader/style';
-import { useQR } from '../../../hooks/useQR';
 
 interface Props {
   folderProfiles: FolderProfile[];
   handleDelete: (id: string) => void;
   handleEdit: (id: string) => void;
+  qrCodes: string[];
 }
 
-const FolderProfiles = ({ folderProfiles, handleDelete, handleEdit }: Props) => {
+const FolderProfiles = ({
+  folderProfiles,
+  handleDelete,
+  handleEdit,
+  qrCodes,
+}: Props) => {
   const [anchorEls, setAnchorEls] = useState<{ [key: string]: null | HTMLElement }>({});
-
-  const { qrCodes } = useQR();
 
   const open = Boolean(anchorEls);
 

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Grid, Modal } from '@mui/material';
 import {
@@ -14,24 +14,22 @@ import { db, storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import CustomTextField from '../TextField';
 import { addDoc, collection } from 'firebase/firestore';
-import { useQR } from '../../hooks/useQR';
 
 const Add = ({
   folderProfiles,
   setFolderProfiles,
   getFolderProfiles,
+  selectedFiles,
+  setSelectedFiles,
+  uploadedImageUrls,
+  generateQRCodes,
+  handleAddImgClick,
+  handleImageChange,
+  inputFileRef,
 }: AddProfilePageProps) => {
   const [folderName, setFolderName] = useState<string | undefined>("");
-  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
   const [isAdding, setIsAdding] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
-
-  const {
-    uploadedImageUrls,
-    generateQRCodes,
-  } = useQR();
-
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
 
   const handleOpen = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -51,27 +49,6 @@ const Add = ({
     setSelectedFiles(null);
     setIsAdding(false);
   }
-
-  const handleAddImgClick = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    if (inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (files) {
-      const selectedFilesArray: File[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        selectedFilesArray.push(files[i]);
-      }
-
-      setSelectedFiles(selectedFilesArray);
-    }
-  };
 
   const handleAdd = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -140,7 +117,7 @@ const Add = ({
             />
           </Grid>
           <Grid item>
-            <AddImgBtn onClick={handleAddImgClick}>Add Images</AddImgBtn>
+            <AddImgBtn onClick={handleAddImgClick}>Add Image</AddImgBtn>
             <input
               type="file"
               accept="image/*"
@@ -167,11 +144,9 @@ const Add = ({
           justifyContent="center"
           margin="auto"
         >
-          {selectedFiles &&
-            Array.from(selectedFiles).map((file, index) => (
-              <ImagePreview key={index} src={URL.createObjectURL(file)} alt={file.name} />
-            ))
-          }
+          {selectedFiles && selectedFiles.map((file, index) => (
+            <ImagePreview key={index} src={URL.createObjectURL(file)} alt={file.name} />
+          ))}
         </Grid>
         <Grid
           container

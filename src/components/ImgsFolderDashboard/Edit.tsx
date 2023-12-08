@@ -53,16 +53,21 @@ const Edit = ({
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
+
     if (files) {
-      const selectedFilesArray: File[] = [];
+      const reader = new FileReader();
+      const selectedFiles: File[] = [];
 
       for (let i = 0; i < files.length; i++) {
-        selectedFilesArray.push(files[i]);
+        const file = files[i];
+        reader.readAsDataURL(file);
+        selectedFiles.push(file);
       }
 
-      setSelectedFiles(selectedFilesArray);
+      setSelectedFiles(selectedFiles);
     }
   };
+
 
   const handleEdit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();

@@ -9,11 +9,22 @@ import Profiles from '../../pages/private/FolderProfiles';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, getStorage, listAll, ref } from 'firebase/storage';
 import Logout from '../Logout';
+import { useGeneratedQR } from '../../hooks/useGeneratedQR';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
   const [selectedFolderProfile, setSelectedFolderProfile] = useState<FolderProfile | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
+
+  const {
+    generateQRCodes,
+    handleAddImgClick,
+    inputFileRef,
+    qrCodes,
+    uploadedImageUrls,
+    setUploadedImageUrls,
+  } = useGeneratedQR();
 
   const getFolders = async () => {
     try {
@@ -31,6 +42,29 @@ const ImgsFolderDashboard = () => {
   useEffect(() => {
     getFolders();
   }, []);
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+
+    if (files) {
+      const reader = new FileReader();
+      const selectedFiles: File[] = [];
+
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+
+        reader.onload = (event) => {
+          const dataURL = event.target?.result as string;
+          setUploadedImageUrls((prevUrls) => [...prevUrls, dataURL]);
+        };
+
+        reader.readAsDataURL(file);
+        selectedFiles.push(file);
+      }
+
+      setSelectedFiles(selectedFiles);
+    }
+  };
 
   const handleEdit = (id: string) => {
     const [profile] = folderProfiles.filter((profile) => profile.id === id);
@@ -83,11 +117,19 @@ const ImgsFolderDashboard = () => {
             handleDelete={handleDelete}
             handleEdit={handleEdit}
             folderProfiles={folderProfiles}
+            qrCodes={qrCodes}
           />
           <Add
             folderProfiles={folderProfiles}
             setFolderProfiles={setFolderProfiles}
             getFolderProfiles={getFolders}
+            setSelectedFiles={setSelectedFiles}
+            selectedFiles={selectedFiles}
+            uploadedImageUrls={uploadedImageUrls}
+            generateQRCodes={generateQRCodes}
+            handleAddImgClick={handleAddImgClick}
+            handleImageChange={handleImageChange}
+            inputFileRef={inputFileRef}
           />
         </>
       ) : (

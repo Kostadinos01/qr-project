@@ -82,11 +82,14 @@ export const useGeneratedQR = () => {
   };
 
   return {
+    generateQRCodes,
     handleAddImgClick,
     handleClearAllBtnClick,
     handleImageChange,
     inputFileRef,
     qrCodes,
     loading,
+    uploadedImageUrls,
+    setUploadedImageUrls,
   }
 }
