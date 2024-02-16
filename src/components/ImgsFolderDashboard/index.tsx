@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Swal from 'sweetalert2';
 import Add from './Add';
 import Edit from './Edit';
@@ -9,7 +9,7 @@ import Profiles from '../../pages/private/FolderProfiles';
 import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, getStorage, listAll, ref } from 'firebase/storage';
 import Logout from '../Logout';
-import { useGeneratedQR } from '../../hooks/useGeneratedQR';
+import { QRContext } from '../../context/QRContext';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
@@ -24,7 +24,7 @@ const ImgsFolderDashboard = () => {
     qrCodes,
     uploadedImageUrls,
     setUploadedImageUrls,
-  } = useGeneratedQR();
+  } = useContext(QRContext);
 
   const getFolders = async () => {
     try {

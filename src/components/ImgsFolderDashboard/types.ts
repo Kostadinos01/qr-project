@@ -8,7 +8,7 @@ export interface AddProfilePageProps {
   setSelectedFiles: Dispatch<SetStateAction<File[] | null>>;
   selectedFiles: File[] | null;
   uploadedImageUrls: string[];
-  generateQRCodes: (imageUrls: string[]) => Promise<void>;
+  generateQRCodes: (imageUrls: string[]) => void;
   handleAddImgClick: (e: { preventDefault: () => void; }) => void;
   handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   inputFileRef: MutableRefObject<HTMLInputElement | null>;

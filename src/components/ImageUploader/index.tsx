@@ -1,4 +1,4 @@
-import React, { startTransition } from "react";
+import React, { startTransition, useContext } from "react";
 import {
   Container,
   Title,
@@ -11,9 +11,9 @@ import {
 } from "./style";
 import LoadingSpinner from "../LoadingSpinner";
 import { Button, Grid } from "@mui/material";
-import { useGeneratedQR } from "../../hooks/useGeneratedQR";
 import { useNavigate } from "react-router-dom";
 import { PATHS } from "../../constants/Common";
+import { QRContext } from "../../context/QRContext";
 
 const ImageUpload: React.FC = () => {
   const {
@@ -23,7 +23,7 @@ const ImageUpload: React.FC = () => {
     inputFileRef,
     qrCodes,
     loading,
-  } = useGeneratedQR();
+  } = useContext(QRContext);
 
   const navigate = useNavigate();
 

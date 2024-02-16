@@ -10,8 +10,7 @@ import {
   ImageUploadBtn,
 } from './style';
 import { AddProfilePageProps } from './types';
-import { db, storage } from '../../firebase/firebase';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { db } from '../../firebase/firebase';
 import CustomTextField from '../TextField';
 import { addDoc, collection } from 'firebase/firestore';
 
@@ -63,15 +62,6 @@ const Add = ({
     }
 
     try {
-      await Promise.all(
-        selectedFiles.map(async (file) => {
-          const folderRef = ref(storage, `${folderName}/`);
-          const imageRef = ref(folderRef, file.name);
-          await uploadBytes(imageRef, file);
-          return getDownloadURL(imageRef);
-        })
-      );
-
       await addDoc(collection(db, "FolderProfiles"), {
         folderName,
         uploadedImageUrls,
@@ -125,7 +115,6 @@ const Add = ({
               ref={inputFileRef}
               style={{ display: 'none' }}
               onChange={handleImageChange}
-              multiple
             />
           </Grid>
         </Grid>
