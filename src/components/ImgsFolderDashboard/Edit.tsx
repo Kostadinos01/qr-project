@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import { Grid, Modal } from '@mui/material';
 import {
-  AddImgBtn,
   CancelBtn,
   Container,
   ImagePreview,
@@ -10,7 +9,6 @@ import {
 import { EditProfilePageProps } from './types';
 import { db, storage } from '../../firebase/firebase';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { ImageUploadBtn } from '../ImageUploader/style';
 import CustomTextField from '../TextField';
 import { collection, doc, setDoc } from 'firebase/firestore';
 
@@ -35,39 +33,11 @@ const Edit = ({
     setSelectedFiles(null);
   };
 
-  const inputFileRef = useRef<HTMLInputElement | null>(null);
-
   const handleCancelClick = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
     setIsEditing(false);
   }
-
-  const handleAddImgClick = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-
-    if (inputFileRef.current) {
-      inputFileRef.current.click();
-    }
-  };
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-
-    if (files) {
-      const reader = new FileReader();
-      const selectedFiles: File[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        reader.readAsDataURL(file);
-        selectedFiles.push(file);
-      }
-
-      setSelectedFiles(selectedFiles);
-    }
-  };
-
 
   const handleEdit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -149,18 +119,6 @@ const Edit = ({
               handleChange={(e) => setFolderName(e.target.value)}
             />
           </Grid>
-          <Grid item>
-            <AddImgBtn onClick={handleAddImgClick}>Add Images</AddImgBtn>
-            <input
-              type="file"
-              accept="image/*"
-              capture="environment"
-              ref={inputFileRef}
-              style={{ display: 'none' }}
-              onChange={handleImageChange}
-              multiple
-            />
-          </Grid>
         </Grid>
         <Grid
           container
@@ -190,9 +148,6 @@ const Edit = ({
           justifyContent="center"
           gap={4}
         >
-          <ImageUploadBtn variant="contained" onClick={handleEdit}>
-            Save
-          </ImageUploadBtn>
           <CancelBtn variant="contained" onClick={handleCancelClick}>
             Cancel
           </CancelBtn>

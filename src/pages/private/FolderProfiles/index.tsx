@@ -16,7 +16,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FolderProfileOverview from '../FolderProfileOverview';
 import { FolderProfile } from '../../../types/Common';
-import { QRContainer, DownloadLink } from '../../../components/ImageUploader/style';
+import { QRContainer, DownloadLink } from '../../../components/ShowQRImage/style';
 
 interface Props {
   folderProfiles: FolderProfile[];

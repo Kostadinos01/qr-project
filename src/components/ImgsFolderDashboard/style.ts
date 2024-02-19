@@ -41,23 +41,6 @@ const ImagePreview = styled("img")({
   marginBottom: "20px",
 });
 
-const AddImgBtn = styled(Button)({
-  color: warning.main,
-  backgroundColor: primary.main,
-  fontWeight: "900",
-  borderRadius: "5px",
-  textAlign: "center",
-  fontSize: "16px",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  margin: "auto",
-
-  "&:hover": {
-    backgroundColor: primary.dark,
-  },
-});
-
 const Btn = styled(Button)({
   color: warning.main,
   backgroundColor: primary.main,
@@ -71,20 +54,6 @@ const Btn = styled(Button)({
 
   "&:hover": {
     backgroundColor: primary.dark,
-  },
-});
-
-const ImageUploadBtn = styled(Button)({
-  backgroundColor: "#f16e30",
-  color: "white",
-  fontWeight: "800",
-  borderRadius: "20px",
-  margin: "20px 0",
-  textAlign: "center",
-  fontSize: "14px",
-
-  '&:hover': {
-    backgroundColor: "#e44f25",
   },
 });
 
@@ -106,8 +75,6 @@ export {
   ProfilesContainer,
   Container,
   ImagePreview,
-  AddImgBtn,
   Btn,
-  ImageUploadBtn,
   CancelBtn,
 }

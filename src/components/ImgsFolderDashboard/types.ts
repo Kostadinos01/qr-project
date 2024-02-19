@@ -1,4 +1,4 @@
-import { Dispatch, MutableRefObject, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { FolderProfile } from "../../types/Common";
 
 export interface AddProfilePageProps {
@@ -7,11 +7,6 @@ export interface AddProfilePageProps {
   getFolderProfiles: () => void;
   setSelectedFiles: Dispatch<SetStateAction<File[] | null>>;
   selectedFiles: File[] | null;
-  uploadedImageUrls: string[];
-  generateQRCodes: (imageUrls: string[]) => void;
-  handleAddImgClick: (e: { preventDefault: () => void; }) => void;
-  handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  inputFileRef: MutableRefObject<HTMLInputElement | null>;
 }
 
 export interface EditProfilePageProps {

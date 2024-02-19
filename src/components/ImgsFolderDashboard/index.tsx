@@ -18,12 +18,7 @@ const ImgsFolderDashboard = () => {
   const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
 
   const {
-    generateQRCodes,
-    handleAddImgClick,
-    inputFileRef,
     qrCodes,
-    uploadedImageUrls,
-    setUploadedImageUrls,
   } = useContext(QRContext);
 
   const getFolders = async () => {
@@ -42,29 +37,6 @@ const ImgsFolderDashboard = () => {
   useEffect(() => {
     getFolders();
   }, []);
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-
-    if (files) {
-      const reader = new FileReader();
-      const selectedFiles: File[] = [];
-
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-
-        reader.onload = (event) => {
-          const dataURL = event.target?.result as string;
-          setUploadedImageUrls((prevUrls) => [...prevUrls, dataURL]);
-        };
-
-        reader.readAsDataURL(file);
-        selectedFiles.push(file);
-      }
-
-      setSelectedFiles(selectedFiles);
-    }
-  };
 
   const handleEdit = (id: string) => {
     const [profile] = folderProfiles.filter((profile) => profile.id === id);
@@ -125,11 +97,6 @@ const ImgsFolderDashboard = () => {
             getFolderProfiles={getFolders}
             setSelectedFiles={setSelectedFiles}
             selectedFiles={selectedFiles}
-            uploadedImageUrls={uploadedImageUrls}
-            generateQRCodes={generateQRCodes}
-            handleAddImgClick={handleAddImgClick}
-            handleImageChange={handleImageChange}
-            inputFileRef={inputFileRef}
           />
         </>
       ) : (
