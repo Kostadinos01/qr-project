@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material'
+import { Grid, Typography } from '@mui/material'
 import React, { useContext } from 'react'
 import LoadingSpinner from '../LoadingSpinner'
 import {
@@ -11,7 +11,11 @@ import {
 
 import { QRContext } from '../../context/QRContext'
 
-const ShowQRImage = () => {
+interface Props {
+  description: string | undefined;
+}
+
+const ShowQRImage = ({ description }: Props) => {
   const {
     handleAddImgClick,
     handleClearAllBtnClick,
@@ -53,12 +57,13 @@ const ShowQRImage = () => {
       )}
       {qrCodes.map((qr, index) => (
         <QRContainer key={index}>
+          <Typography textAlign="center">{description}</Typography>
           <QRCodeImage
             src={qr}
             alt={`QR Code ${index}`}
             sx={{
-              width: { xs: "250px", md: "500px" },
-              height: { xs: "250px", md: "500px" },
+              width: "250px",
+              height: "250px",
             }}
           />
           <DownloadLink href={qr} download={`qrcode_${index}.png`}>

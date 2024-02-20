@@ -2,7 +2,6 @@ import React, { useState, MouseEvent } from 'react';
 import {
   MainContainer,
   CustomCard,
-  QRCodeImage,
 } from './style';
 import {
   IconButton,
@@ -16,7 +15,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import FolderProfileOverview from '../FolderProfileOverview';
 import { FolderProfile } from '../../../types/Common';
-import { QRContainer, DownloadLink } from '../../../components/ShowQRImage/style';
 
 interface Props {
   folderProfiles: FolderProfile[];
@@ -29,7 +27,6 @@ const FolderProfiles = ({
   folderProfiles,
   handleDelete,
   handleEdit,
-  qrCodes,
 }: Props) => {
   const [anchorEls, setAnchorEls] = useState<{ [key: string]: null | HTMLElement }>({});
 
@@ -113,21 +110,6 @@ const FolderProfiles = ({
               >
                 {profile.folderName}
               </Typography>
-              {qrCodes.map((qr, index) => (
-                <QRContainer key={index}>
-                  <QRCodeImage
-                    src={qr}
-                    alt={`QR Code ${index}`}
-                    sx={{
-                      width: { xs: "250px", md: "500px" },
-                      height: { xs: "250px", md: "500px" },
-                    }}
-                  />
-                  <DownloadLink href={qr} download={`qrcode_${index}.png`}>
-                    Download QR
-                  </DownloadLink>
-                </QRContainer>
-              ))}
             </FolderProfileOverview>
           </CustomCard>
         ))

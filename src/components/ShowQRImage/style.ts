@@ -39,7 +39,13 @@ const ImageUploadBtn = styled(Button)({
 });
 
 const QRContainer = styled(Grid)({
+  display: "flex",
+  flexDirection: "column",
+  margin: "auto",
   marginTop: "30px",
+  backgroundColor: '#1b2034',
+  padding: 20,
+  borderRadius: "15px",
 });
 
 const QRCodeImage = styled('img')({

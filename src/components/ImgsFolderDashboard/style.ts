@@ -71,10 +71,19 @@ const CancelBtn = styled(Button)({
   },
 });
 
+const CenteredContainer = styled(Grid)({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  marginTop: "20px",
+  gap: 4,
+});
+
 export {
   ProfilesContainer,
   Container,
   ImagePreview,
   Btn,
   CancelBtn,
+  CenteredContainer,
 }

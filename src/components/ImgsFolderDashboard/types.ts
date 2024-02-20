@@ -1,12 +1,12 @@
-import { Dispatch, SetStateAction } from "react";
+import { ChangeEvent, Dispatch, SetStateAction } from "react";
 import { FolderProfile } from "../../types/Common";
 
 export interface AddProfilePageProps {
   folderProfiles: FolderProfile[];
   setFolderProfiles: Dispatch<SetStateAction<FolderProfile[]>>;
   getFolderProfiles: () => void;
-  setSelectedFiles: Dispatch<SetStateAction<File[] | null>>;
-  selectedFiles: File[] | null;
+  setSelectedFiles: Dispatch<SetStateAction<ChangeEvent<HTMLInputElement> | undefined>>;
+  selectedFiles: ChangeEvent<HTMLInputElement> | undefined;
 }
 
 export interface EditProfilePageProps {

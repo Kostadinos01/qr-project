@@ -10,9 +10,11 @@ import React, {
 
 import QRCode from "qrcode";
 
-import { storage } from "../firebase/firebase";
+import { db, storage } from "../firebase/firebase";
 import { ChildrenPropTypes } from "../types/Common";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { addDoc, collection } from "firebase/firestore";
+import Swal from "sweetalert2";
 
 export const QRContext = createContext<{
   qrCodes: string[];
@@ -112,6 +114,18 @@ export const QRProvider = ({ children }: ChildrenPropTypes) => {
         setLoading(false);
 
         await generateQRCodes(uploadedImageUrls);
+
+        await addDoc(collection(db, "FolderProfiles"), {
+          uploadedImageUrls,
+        });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Added!',
+          text: `Data has been Added.`,
+          showConfirmButton: false,
+          timer: 1000,
+        });
       } catch (error) {
         console.error("Error uploading images:", error);
       }

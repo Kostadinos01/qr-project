@@ -10,7 +10,7 @@ import { db } from '../../firebase/firebase';
 import CustomTextField from '../TextField';
 import { addDoc, collection } from 'firebase/firestore';
 import { QRContext } from '../../context/QRContext';
-import ShowQRImage from '../ShowQRImage';
+import { AddImgBtn, ClearAllBtn } from '../ShowQRImage/style';
 
 const Add = ({
   folderProfiles,
@@ -24,10 +24,12 @@ const Add = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const {
-    generateQRCodes,
+    handleImageChange,
     uploadedImageUrls,
+    handleAddImgClick,
+    handleClearAllBtnClick,
+    inputFileRef,
   } = useContext(QRContext);
-
 
   const handleOpen = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
@@ -38,14 +40,15 @@ const Add = ({
 
   const handleClose = () => {
     setOpen(false);
-    setSelectedFiles(null);
+    setSelectedFiles(undefined);
     setIsAdding(false);
+    setFolderName("");
   };
 
   const handleAdd = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
 
-    if (!folderName || !selectedFiles) {
+    if (!selectedFiles) {
       return Swal.fire({
         icon: 'error',
         title: 'Error!',
@@ -76,7 +79,8 @@ const Add = ({
     } catch (error) {
       console.error('Error uploading images:', error);
     }
-    generateQRCodes(uploadedImageUrls);
+
+    await handleImageChange(selectedFiles);
   };
 
   const folders = () => {
@@ -97,7 +101,31 @@ const Add = ({
             handleChange={(e) => setFolderName(e.target.value)}
           />
         </Grid>
-        <ShowQRImage />
+        <Grid
+          container
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: 2,
+            marginTop: 2,
+          }}
+        >
+          <AddImgBtn onClick={handleAddImgClick}>Add Image</AddImgBtn>
+          <input
+            type="file"
+            accept="image/*"
+            capture="environment"
+            ref={inputFileRef}
+            style={{ display: 'none' }}
+            onChange={handleAdd}
+          />
+          <ClearAllBtn
+            onClick={handleClearAllBtnClick}
+          >
+            CLEAR ALL
+          </ClearAllBtn>
+        </Grid>
       </Container>
     )
   }

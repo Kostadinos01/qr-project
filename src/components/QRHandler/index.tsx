@@ -25,7 +25,7 @@ const ImageUpload: React.FC = () => {
         <Subtitle>
           Please select images, upload them, and generate QR codes. You can also download the generated QR codes.
         </Subtitle>
-        <ShowQRImage />
+        <ShowQRImage description="" />
       </Container>
     </>
   );

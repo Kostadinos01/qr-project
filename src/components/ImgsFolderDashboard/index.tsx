@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
 import Swal from 'sweetalert2';
 import Add from './Add';
 import Edit from './Edit';
@@ -10,12 +10,18 @@ import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
 import { deleteObject, getStorage, listAll, ref } from 'firebase/storage';
 import Logout from '../Logout';
 import { QRContext } from '../../context/QRContext';
+import { Button } from '@mui/material';
+import ShowQRImage from '../ShowQRImage';
+import CustomTextField from '../TextField';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { CenteredContainer } from './style';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
   const [selectedFolderProfile, setSelectedFolderProfile] = useState<FolderProfile | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<File[] | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<ChangeEvent<HTMLInputElement> | undefined>(undefined);
+  const [folderName, setFolderName] = useState<string | undefined>("");
 
   const {
     qrCodes,
@@ -83,6 +89,20 @@ const ImgsFolderDashboard = () => {
   return (
     <>
       <Logout />
+      <CenteredContainer container>
+        <CustomTextField
+          itemID="folder-name"
+          itemLabel="Folder Name"
+          value={folderName}
+          handleChange={(e) => setFolderName(e.target.value)}
+        />
+        <Button onClick={() => setFolderName("")}>
+          <DeleteIcon />
+        </Button>
+      </CenteredContainer>
+      <CenteredContainer container>
+        <ShowQRImage description={folderName} />
+      </CenteredContainer>
       {!isEditing ? (
         <>
           <Profiles
