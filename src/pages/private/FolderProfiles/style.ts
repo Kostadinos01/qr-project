@@ -2,6 +2,7 @@ import {
   styled,
   Box,
   Card,
+  Grid,
 } from '@mui/material'
 import { theme } from '../../../theme/pallete';
 
@@ -29,8 +30,9 @@ const CustomCard = styled(Card)({
   borderRadius: '20px',
   padding: '10px',
   width: '250px',
-  height: '280px',
+  height: '300px',
   margin: 'auto',
+  marginTop: '50px',
 });
 
 const ImagePreview = styled("img")({
@@ -38,6 +40,12 @@ const ImagePreview = styled("img")({
   maxHeight: "210px",
   margin: "20px auto",
   borderRadius: "5px",
+});
+
+const QRContainer = styled(Grid)({
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
 });
 
 const QRCodeImage = styled('img')({
@@ -50,5 +58,6 @@ export {
   MainContainer,
   CustomCard,
   ImagePreview,
+  QRContainer,
   QRCodeImage,
 }

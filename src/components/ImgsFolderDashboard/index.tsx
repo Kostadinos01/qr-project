@@ -1,31 +1,26 @@
-import React, { useState, useEffect, useContext, ChangeEvent } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
-import Add from './Add';
-import Edit from './Edit';
-
 import { FolderProfile } from '../../types/Common';
-import { db } from '../../firebase/firebase';
 import Profiles from '../../pages/private/FolderProfiles';
-import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
-import { deleteObject, getStorage, listAll, ref } from 'firebase/storage';
+import { db } from '../../firebase/firebase';
+import {
+  getDocs,
+  collection,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
+import {
+  deleteObject,
+  getStorage,
+  listAll,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 import Logout from '../Logout';
-import { QRContext } from '../../context/QRContext';
-import { Button } from '@mui/material';
-import ShowQRImage from '../ShowQRImage';
-import CustomTextField from '../TextField';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { CenteredContainer } from './style';
+import Add from './Add';
 
 const ImgsFolderDashboard = () => {
   const [folderProfiles, setFolderProfiles] = useState<FolderProfile[]>([]);
-  const [selectedFolderProfile, setSelectedFolderProfile] = useState<FolderProfile | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [selectedFiles, setSelectedFiles] = useState<ChangeEvent<HTMLInputElement> | undefined>(undefined);
-  const [folderName, setFolderName] = useState<string | undefined>("");
-
-  const {
-    qrCodes,
-  } = useContext(QRContext);
 
   const getFolders = async () => {
     try {
@@ -43,13 +38,6 @@ const ImgsFolderDashboard = () => {
   useEffect(() => {
     getFolders();
   }, []);
-
-  const handleEdit = (id: string) => {
-    const [profile] = folderProfiles.filter((profile) => profile.id === id);
-
-    setSelectedFolderProfile(profile);
-    setIsEditing(true);
-  };
 
   const handleDelete = async (id: string) => {
     Swal.fire({
@@ -86,48 +74,43 @@ const ImgsFolderDashboard = () => {
     });
   };
 
+  const handleDownload = async (imageUrl: string | undefined) => {
+    try {
+      if (!imageUrl) {
+        console.error('Image URL is undefined.');
+        return;
+      }
+
+      const response = await fetch(imageUrl);
+      if (!response.ok) {
+        throw new Error('Failed to download image.');
+      }
+      const imageBlob = await response.blob();
+
+      const storage = getStorage();
+      const fileName = imageUrl.split('/').pop();
+      const fileRef = ref(storage, fileName);
+
+      await uploadBytes(fileRef, imageBlob);
+
+      console.log('Image downloaded and stored successfully.');
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  };
+
   return (
     <>
       <Logout />
-      <CenteredContainer container>
-        <CustomTextField
-          itemID="folder-name"
-          itemLabel="Folder Name"
-          value={folderName}
-          handleChange={(e) => setFolderName(e.target.value)}
-        />
-        <Button onClick={() => setFolderName("")}>
-          <DeleteIcon />
-        </Button>
-      </CenteredContainer>
-      <CenteredContainer container>
-        <ShowQRImage description={folderName} />
-      </CenteredContainer>
-      {!isEditing ? (
-        <>
-          <Profiles
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-            folderProfiles={folderProfiles}
-            qrCodes={qrCodes}
-          />
-          <Add
-            folderProfiles={folderProfiles}
-            setFolderProfiles={setFolderProfiles}
-            getFolderProfiles={getFolders}
-            setSelectedFiles={setSelectedFiles}
-            selectedFiles={selectedFiles}
-          />
-        </>
-      ) : (
-        <Edit
-          folderProfiles={folderProfiles}
-          selectedFolderProfile={selectedFolderProfile}
-          setFolderProfiles={setFolderProfiles}
-          setIsEditing={setIsEditing}
-          getFolderProfiles={getFolders}
-        />
-      )}
+      <Add
+        folderProfiles={folderProfiles}
+        setFolderProfiles={setFolderProfiles}
+      />
+      <Profiles
+        handleDelete={handleDelete}
+        handleDownload={handleDownload}
+        folderProfiles={folderProfiles}
+      />
     </>
   );
 };

@@ -1,7 +1,9 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { useState, MouseEvent, useContext } from 'react';
 import {
   MainContainer,
   CustomCard,
+  QRCodeImage,
+  QRContainer,
 } from './style';
 import {
   IconButton,
@@ -12,23 +14,28 @@ import {
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
+import DownloadIcon from '@mui/icons-material/Download';
+
 import FolderProfileOverview from '../FolderProfileOverview';
 import { FolderProfile } from '../../../types/Common';
+import { QRContext } from '../../../context/QRContext';
 
 interface Props {
   folderProfiles: FolderProfile[];
   handleDelete: (id: string) => void;
-  handleEdit: (id: string) => void;
-  qrCodes: string[];
+  handleDownload: (id: string) => void;
 }
 
 const FolderProfiles = ({
   folderProfiles,
   handleDelete,
-  handleEdit,
+  handleDownload,
 }: Props) => {
   const [anchorEls, setAnchorEls] = useState<{ [key: string]: null | HTMLElement }>({});
+
+  const {
+    qrCodes,
+  } = useContext(QRContext);
 
   const open = Boolean(anchorEls);
 
@@ -83,23 +90,38 @@ const FolderProfiles = ({
                     <MenuItem
                       onClick={() => {
                         handleClose(profile.id!);
-                        handleEdit(profile.id!);
-                      }}
-                    >
-                      <EditIcon />
-                    </MenuItem>
-                    <MenuItem
-                      onClick={() => {
-                        handleClose(profile.id!);
                         handleDelete(profile.id!);
                       }}
                     >
                       <DeleteIcon />
                     </MenuItem>
-                  </Menu></>
+                    <MenuItem
+                      onClick={() => {
+                        handleClose(profile.id!);
+                        handleDownload(profile.imageUrl);
+                      }}
+                    >
+                      <DownloadIcon />
+                    </MenuItem>
+                  </Menu>
+                </>
               }
             />
-            <FolderProfileOverview
+            {
+              qrCodes.map((qr, index) => (
+                <QRContainer key={index}>
+                  <QRCodeImage
+                    src={qr}
+                    alt={`QR Code ${index}`}
+                    sx={{
+                      width: "200px",
+                      height: "200px",
+                    }}
+                  />
+                </QRContainer>
+              ))
+            }
+            {/* <FolderProfileOverview
               folderName={profile.folderName}
               selectedFiles={profile.selectedFiles}
             >
@@ -110,7 +132,7 @@ const FolderProfiles = ({
               >
                 {profile.folderName}
               </Typography>
-            </FolderProfileOverview>
+            </FolderProfileOverview> */}
           </CustomCard>
         ))
       ) : (

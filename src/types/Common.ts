@@ -20,7 +20,7 @@ export interface AuthProps {
 export interface FolderProfile {
   children?: React.ReactNode;
   id?: string | undefined;
-  url?: string | undefined;
+  imageUrl: string;
   folderName: string;
   selectedFiles: File[] | null;
 }
