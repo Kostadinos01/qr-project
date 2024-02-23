@@ -1,7 +1,7 @@
 import React from 'react';
 import "./App.css"
-import RoutesConfig from "./RoutesConfig";
+import QRHandler from './components/QRHandler';
 
 export default function App() {
-  return <RoutesConfig />;
+  return <QRHandler />;
 }

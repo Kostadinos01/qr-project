@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
-import { AuthProvider } from "./context/AuthContext";
 import { QRProvider } from "./context/QRContext";
 
 const root = ReactDOM.createRoot(
@@ -12,11 +11,9 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <QRProvider>
-          <App />
-        </QRProvider>
-      </AuthProvider>
+      <QRProvider>
+        <App />
+      </QRProvider>
     </BrowserRouter>
   </React.StrictMode>,
 );

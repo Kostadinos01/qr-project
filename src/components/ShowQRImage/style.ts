@@ -15,17 +15,6 @@ const AddImgBtn = styled(Button)({
   },
 });
 
-const ClearAllBtn = styled(Button)({
-  color: "white",
-  backgroundColor: "#009999",
-  fontWeight: "800",
-  borderRadius: "5px",
-
-  "&:hover": {
-    backgroundColor: "#004d4d",
-  },
-});
-
 const ImageUploadBtn = styled(Button)({
   backgroundColor: "#f16e30",
   color: "white",
@@ -59,7 +48,6 @@ const DownloadLink = styled('a')({
 
 export {
   AddImgBtn,
-  ClearAllBtn,
   ImageUploadBtn,
   QRContainer,
   QRCodeImage,
