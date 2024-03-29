@@ -51,8 +51,8 @@ const ShowQRImage = () => {
             src={qr}
             alt={`QR Code ${index}`}
             sx={{
-              width: "200px",
-              height: "200px",
+              width: "300px",
+              height: "300px",
             }}
           />
           <DownloadLink href={qr} download={`qrcode_${index}.png`}>
